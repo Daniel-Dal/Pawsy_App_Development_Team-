@@ -17,3 +17,11 @@ Aplicaciones similares:
 - Home Inventory: Room Tracker https://play.google.com/store/apps/details?id=com.gradoid.home.inventory
 - Home Inventory Tracker: House https://play.google.com/store/apps/details?id=com.syntralog.app 
 
+# Idea 3 EzLive
+
+EzLive es una aplicación diseñada para ayudarte a organizar y simplificar las tareas de tu día a día. Gestiona tus pendientes, compras, gastos, pagos, recordatorios y responsabilidades del hogar desde un solo lugar. Mantén todo bajo control, recibe recordatorios importantes y comparte tareas con familiares o compañeros para hacer tu vida más sencilla.
+
+Aplicaciones similares:
+- OurHome
+- Sweepy: Home Cleaning Schedule
+- Family Organizer
