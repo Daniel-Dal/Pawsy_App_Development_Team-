@@ -5,10 +5,11 @@ El propósito de PAWSY es facilitar el cuidado de las mascotas de manera sencill
 La aplicación PAWSY es desarrollada y pertenece a PAWSY Company, quien se reserva todos los derechos de autor y de propiedad intelectual relacionados con la aplicación, su contenido, diseño, funcionalidades y elementos distintivos. Queda prohibida la reproducción, modificación, distribución o utilización de cualquier parte de la aplicación sin la autorización previa de PAWSY Company.
 Revise el archivo [HELP.md](HELP.md) donde hay mas información sobre como usar esta plantilla.
 
-Autor(es): Daniel Mateo Guayara Lopez
-           Jorge  Edudardo Cardoso Capera
-           Andres Felipe Rueda Perez
-           David  Santiago Zartha Gaitan
+Autor(es):
+Daniel Mateo Guayara Lopez
+Jorge  Edudardo Cardoso Capera
+Andres Felipe Rueda Perez
+David  Santiago Zartha Gaitan
 
 ## Referencias
 
