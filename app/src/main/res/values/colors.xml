@@ -7,4 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="pawsy_orange">#FF7A4D</color>
+    <color name="pawsy_orange_dark">#FF6840</color>
+    <color name="pawsy_background">#FFF9F0</color>
+    <color name="pawsy_text">#FF7043</color>
 </resources>
