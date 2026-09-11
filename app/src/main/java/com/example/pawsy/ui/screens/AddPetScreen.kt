@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -46,32 +45,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.DropdownMenu
+import com.example.pawsy.ui.components.PawsyTextField
 
 
-@Composable
-fun PawsyTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    keyboardType: KeyboardType = KeyboardType.Text
-
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = colorEditTextAgregarMascota,
-            unfocusedContainerColor = colorEditTextAgregarMascota,
-            focusedBorderColor = Color.Transparent,
-            unfocusedBorderColor = Color.Transparent,
-            focusedTextColor = colorTextEditTextAgregarMascota,
-            unfocusedTextColor = colorTextEditTextAgregarMascota
-        )
-    )
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -184,7 +160,7 @@ fun MyText() {
                     value = peso,
                     onValueChange = { newValue -> if (newValue.all { it.isDigit() }) peso = newValue },
                     keyboardType = KeyboardType.Number,
-                    modifier = Modifier.fillMaxWidth(0.6f) // ~60% of screen width instead of weight(1f)
+                    modifier = Modifier.fillMaxWidth(0.6f)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Box {

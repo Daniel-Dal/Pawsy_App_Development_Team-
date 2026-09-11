@@ -2,7 +2,7 @@ package com.example.pawsy.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-
+val colorFondoPerfil = Color(0xFFFFF9F0)
 
 val colorFondoInicioApp = Color(0xFFFFF9F0)
 
