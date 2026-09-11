@@ -7,10 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,7 +15,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,34 +25,14 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
+import com.example.pawsy.ui.components.PawsyTextField
 import com.example.pawsy.ui.theme.colorBlanco
-import com.example.pawsy.ui.theme.colorEditTextAgregarMascota
 import com.example.pawsy.ui.theme.colorFondoAgregarMascota
+import com.example.pawsy.ui.theme.colorFondoPerfilUsuario
 import com.example.pawsy.ui.theme.colorLetraInicioApp
-import com.example.pawsy.ui.theme.colorTextEditTextAgregarMascota
 
-@Composable
-fun PawsyTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    keyboardType: KeyboardType = KeyboardType.Text
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = colorEditTextAgregarMascota,
-            unfocusedContainerColor = colorEditTextAgregarMascota,
-            focusedBorderColor = Color.Transparent,
-            unfocusedBorderColor = Color.Transparent,
-            focusedTextColor = colorTextEditTextAgregarMascota,
-            unfocusedTextColor = colorTextEditTextAgregarMascota
-        )
-    )
-}
+
 
 @Composable
 fun MyText() {
@@ -86,6 +62,7 @@ fun MyText() {
                 style = MaterialTheme.typography.labelSmall,
                 color = colorBlanco
             )
+
             PawsyTextField(value = nombre, onValueChange = { nombre = it })
 
             Text(
