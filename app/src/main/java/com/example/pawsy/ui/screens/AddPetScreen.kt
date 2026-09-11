@@ -121,15 +121,15 @@ fun MyText() {
 
             PawsyTextField(value = peso, onValueChange = { peso = it })
             OutlinedButton(
-                onClick = { /* nothing yet — we'll wire navigation later */ },
+                onClick = { /* nothing yet */ },
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 24.dp),
-                shape = RoundedCornerShape(50), // fully rounded pill shape
-                border = BorderStroke(1.dp, colorLetraInicioApp), // orange border, using your existing orange color
+                shape = RoundedCornerShape(50),
+                border = BorderStroke(1.dp, colorLetraInicioApp),
                 colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = colorLetraInicioApp // orange text
+                    contentColor = colorLetraInicioApp
                 )
             ) {
                 Text(text = stringResource(id = R.string.boton_continuar))
