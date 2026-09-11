@@ -10,5 +10,17 @@
     <string name="subtitulo_razaMascota">Raza</string>
     <string name="subtitulo_pesoMascota">Peso</string>
     <string name="boton_continuar">Continuar</string>
+    
+    <string-array name="opciones_especie">
+        <item>Felino</item>
+        <item>Canino</item>
+        <item>Roedor</item>
+        <item>Ave</item>
+    </string-array>
+
+    <string-array name="opciones_unidad_peso">
+        <item>Kg</item>
+        <item>g</item>
+    </string-array>
 
 </resources>

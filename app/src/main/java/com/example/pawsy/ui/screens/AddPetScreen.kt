@@ -34,17 +34,32 @@ import com.example.pawsy.ui.theme.colorEditTextAgregarMascota
 import com.example.pawsy.ui.theme.colorFondoAgregarMascota
 import com.example.pawsy.ui.theme.colorLetraInicioApp
 import com.example.pawsy.ui.theme.colorTextEditTextAgregarMascota
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.DropdownMenu
+
 
 @Composable
 fun PawsyTextField(
     value: String,
     onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
     keyboardType: KeyboardType = KeyboardType.Text
+
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         colors = OutlinedTextFieldDefaults.colors(
@@ -58,6 +73,7 @@ fun PawsyTextField(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyText() {
     PawsyTheme {
@@ -66,6 +82,13 @@ fun MyText() {
         var edad by remember { mutableStateOf("") }
         var raza by remember { mutableStateOf("") }
         var peso by remember { mutableStateOf("") }
+        var especieExpandible by remember { mutableStateOf(false) }
+        var unidadPeso by remember { mutableStateOf("Kg") }
+        var unidadExpandible by remember { mutableStateOf(false) }
+
+        val especieOpciones = stringArrayResource(id = R.array.opciones_especie)
+        val unidades = stringArrayResource(id = R.array.opciones_unidad_peso)
+
 
         Column(
             modifier = Modifier
@@ -93,7 +116,44 @@ fun MyText() {
                 style = MaterialTheme.typography.labelSmall,
                 color = colorBlanco
             )
-            PawsyTextField(value = especie, onValueChange = { especie = it })
+            ExposedDropdownMenuBox(
+                expanded = especieExpandible,
+                onExpandedChange = { especieExpandible = !especieExpandible }
+            ) {
+                OutlinedTextField(
+                    value = especie,
+                    onValueChange = {},
+                    readOnly = true,
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = especieExpandible) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, enabled = true),
+                    shape = RoundedCornerShape(24.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = colorEditTextAgregarMascota,
+                        unfocusedContainerColor = colorEditTextAgregarMascota,
+                        focusedBorderColor = Color.Transparent,
+                        unfocusedBorderColor = Color.Transparent,
+                        focusedTextColor = colorTextEditTextAgregarMascota,
+                        unfocusedTextColor = colorTextEditTextAgregarMascota
+                    )
+                )
+
+                ExposedDropdownMenu(
+                    expanded = especieExpandible,
+                    onDismissRequest = { especieExpandible = false }
+                ) {
+                    especieOpciones.forEach { option ->
+                        DropdownMenuItem(
+                            text = { Text(option) },
+                            onClick = {
+                                especie = option
+                                especieExpandible = false
+                            }
+                        )
+                    }
+                }
+            }
 
             Text(
                 text = stringResource(id = R.string.subtitulo_edadMascota),
@@ -117,9 +177,43 @@ fun MyText() {
                 text = stringResource(id = R.string.subtitulo_pesoMascota),
                 style = MaterialTheme.typography.labelSmall,
                 color = colorBlanco
-            )
 
-            PawsyTextField(value = peso, onValueChange = { peso = it })
+            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                PawsyTextField(
+                    value = peso,
+                    onValueChange = { newValue -> if (newValue.all { it.isDigit() }) peso = newValue },
+                    keyboardType = KeyboardType.Number,
+                    modifier = Modifier.fillMaxWidth(0.6f) // ~60% of screen width instead of weight(1f)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Box {
+                    Text(
+                        text = unidadPeso,
+                        color = colorTextEditTextAgregarMascota,
+                        modifier = Modifier
+                            .clickable { unidadExpandible = true }
+                            .background(colorEditTextAgregarMascota, RoundedCornerShape(16.dp))
+                            .padding(horizontal = 16.dp, vertical = 12.dp)
+                    )
+                    DropdownMenu(
+                        expanded = unidadExpandible,
+                        onDismissRequest = { unidadExpandible = false }
+                    ) {
+                        unidades.forEach { unidad ->
+                            DropdownMenuItem(
+                                text = { Text(unidad) },
+                                onClick = {
+                                    unidadPeso = unidad
+                                    unidadExpandible = false
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
+
             OutlinedButton(
                 onClick = { /* nothing yet */ },
                 modifier = Modifier
