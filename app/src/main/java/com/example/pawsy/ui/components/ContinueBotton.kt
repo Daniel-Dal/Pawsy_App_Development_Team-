@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun BottomContinue(
+fun ContinueBotton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     textColor: Color,

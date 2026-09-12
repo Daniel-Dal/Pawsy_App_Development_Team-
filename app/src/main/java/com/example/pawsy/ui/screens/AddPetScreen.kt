@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.example.pawsy.R
 import com.example.pawsy.ui.theme.PawsyTheme
 import androidx.compose.ui.Alignment
-import com.example.pawsy.ui.components.BottomContinue
+import com.example.pawsy.ui.components.ContinueBotton
 import com.example.pawsy.ui.components.PawsyTextField
 import com.example.pawsy.ui.theme.colorBlanco
 import com.example.pawsy.ui.theme.colorFondoAgregarMascota
@@ -93,7 +93,7 @@ fun MyText() {
 
             PawsyTextField(value = peso, onValueChange = { peso = it })
 
-            BottomContinue(
+            ContinueBotton(
                 onClick = {
                     // Acción del botón
                 },
