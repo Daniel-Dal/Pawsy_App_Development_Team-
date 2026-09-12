@@ -1,5 +1,4 @@
 package com.example.pawsy.ui.screens
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,10 +12,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pawsy.R
+import com.example.pawsy.ui.components.BottomContinue
 import com.example.pawsy.ui.theme.PawsyFontFamily
 import com.example.pawsy.ui.theme.colorFondoPerfilUsuario
 import com.example.pawsy.ui.theme.colorLetraInicioNombreApp
@@ -41,7 +39,7 @@ import com.example.pawsy.ui.theme.colorRecuadroInicioSesion
 import com.example.pawsy.ui.components.PawsyTextField
 import com.example.pawsy.ui.theme.colorBlanco
 import com.example.pawsy.ui.theme.colorFondoAgregarMascota
-import com.example.pawsy.ui.theme.colorLetraInicioApp
+
 
 
 @Composable
@@ -54,7 +52,7 @@ fun CreateUserScreen() {
     ) {
         var nombre by remember { mutableStateOf("") }
         var correo by remember { mutableStateOf("") }
-        var contraseña by remember { mutableStateOf("") }
+        var contrasena by remember { mutableStateOf("") }
         var aceptado by remember { mutableStateOf(false) }
         Box(
             modifier = Modifier
@@ -177,8 +175,8 @@ fun CreateUserScreen() {
                 color = Color.White
             )
             PawsyTextField(
-                value = contraseña,
-                onValueChange = { contraseña = it },
+                value = contrasena,
+                onValueChange = { contrasena = it },
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(
@@ -224,19 +222,21 @@ fun CreateUserScreen() {
                     fontSize = 16.sp
                 )
             }
-            OutlinedButton(
-                onClick = { /* nothing yet — we'll wire navigation later */ },
+            BottomContinue(
+                onClick = {
+                    // Acción del botón
+                },
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
                     .align(Alignment.TopCenter)
                     .padding(top = 460.dp),
-                shape = RoundedCornerShape(50), // fully rounded pill shape
-                border = BorderStroke(5.dp, colorBlanco), // orange border, using your existing orange color
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = colorBlanco // orange text
-                )
+                textColor = colorBlanco,
+                borderColor = colorBlanco,
+                borderWidth = 5.dp
             ) {
-                Text(text = stringResource(id = R.string.boton_continuar))
+                Text(
+                    text = stringResource(R.string.boton_continuar)
+                )
             }
         }
         Image(

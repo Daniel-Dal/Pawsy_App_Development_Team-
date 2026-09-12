@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,16 +20,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.pawsy.R
 import com.example.pawsy.ui.theme.PawsyTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
+import com.example.pawsy.ui.components.BottomContinue
 import com.example.pawsy.ui.components.PawsyTextField
 import com.example.pawsy.ui.theme.colorBlanco
 import com.example.pawsy.ui.theme.colorFondoAgregarMascota
-import com.example.pawsy.ui.theme.colorFondoPerfilUsuario
-import com.example.pawsy.ui.theme.colorLetraInicioApp
+
 
 
 
@@ -97,20 +92,24 @@ fun MyText() {
             )
 
             PawsyTextField(value = peso, onValueChange = { peso = it })
-            OutlinedButton(
-                onClick = { /* nothing yet — we'll wire navigation later */ },
+
+            BottomContinue(
+                onClick = {
+                    // Acción del botón
+                },
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 24.dp),
-                shape = RoundedCornerShape(50), // fully rounded pill shape
-                border = BorderStroke(1.dp, colorLetraInicioApp), // orange border, using your existing orange color
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = colorLetraInicioApp // orange text
-                )
+                    .align(Alignment.CenterHorizontally),
+                textColor = colorBlanco,
+                borderColor = colorBlanco,
+                borderWidth = 1.dp
             ) {
-                Text(text = stringResource(id = R.string.boton_continuar))
+                Text(
+                    text = stringResource(R.string.boton_continuar)
+                )
             }
+
+
         }
     }
 }
