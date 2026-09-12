@@ -15,6 +15,11 @@ val PawsyFontFamily = FontFamily(
     Font(R.font.poppins_regular),
     Font(R.font.poppins_bold)
 )
+
+val NunitoFontFamily = FontFamily(
+    Font(R.font.nunito_black),
+)
+
 val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = PawsyFontFamily,
@@ -41,6 +46,20 @@ val Typography = Typography(
         fontFamily = PawsyFontFamily,
         fontWeight = Bold,
         fontSize = 20.sp,
+        lineHeight = 20.sp,
+        letterSpacing = 0.5.sp
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = NunitoFontFamily,
+        fontWeight = Bold,
+        fontSize = 25.sp,
+        lineHeight = 20.sp,
+        letterSpacing = 0.5.sp
+    ),
+    titleSmall = TextStyle(
+        fontFamily = NunitoFontFamily,
+        fontWeight = Bold,
+        fontSize = 70.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.5.sp
     )

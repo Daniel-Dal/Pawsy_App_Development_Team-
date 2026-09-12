@@ -53,37 +53,41 @@ fun SplashScreen(onFinished: () -> Unit) {
             mediaPlayer.release()
         }
     }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFFFF9F0)),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    PawsyTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
 
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.pawsy_logo),
-            contentDescription = "Logo de la app"
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        val textAlpha = remember { Animatable(0f) }
+        ) {
 
-        LaunchedEffect(Unit) {
-            delay(600) // espera a que el logo ya haya aparecido
-            textAlpha.animateTo(
-                targetValue = 1f,
-                animationSpec = tween(durationMillis = 500)
-            )
-        }
-        PawsyTheme {
+            Image(painter = painterResource(id = R.drawable.pawsy_logo), contentDescription = null)
             Text(
-                text = stringResource(R.string.tu_mascota_siempre_en_buenas_patas),
-                modifier = Modifier.alpha(textAlpha.value),
-                style = MaterialTheme.typography.bodySmall,
+                text = stringResource(R.string.pawsy),
+                style = MaterialTheme.typography.titleSmall,
                 textAlign = TextAlign.Center,
-                color = Color(0xFFFE854F)
+                color = MaterialTheme.colorScheme.primary
             )
-        }
+            Spacer(modifier = Modifier.height(16.dp))
+            val textAlpha = remember { Animatable(0f) }
+
+            LaunchedEffect(Unit) {
+                delay(600) // espera a que el logo ya haya aparecido
+                textAlpha.animateTo(
+                    targetValue = 1f,
+                    animationSpec = tween(durationMillis = 500)
+                )
+            }
+                Text(
+                    text = stringResource(R.string.tu_mascota_siempre_en_buenas_patas),
+                    modifier = Modifier.alpha(textAlpha.value),
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
     }
 }
 
