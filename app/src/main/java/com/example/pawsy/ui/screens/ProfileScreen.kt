@@ -53,11 +53,11 @@ data class PetProfile(
  *
  * Ejemplo de uso con un ViewModel:
  *   val pet by viewModel.selectedPet.collectAsState()
- *   AddPetScreen(petProfile = pet)
+ *   ProfileScreen(petProfile = pet)
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddPetScreen(
+fun ProfileScreen(
     petProfile: PetProfile = PetProfile(),
     modifier: Modifier = Modifier,
     onEditClick: () -> Unit = {}
@@ -88,7 +88,7 @@ fun AddPetScreen(
                         style = MaterialTheme.typography.headlineMedium
                     )
 
-                    PawIconBadge()
+                    PawIconBadge(onClick = { menuExpanded = !menuExpanded })
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -123,54 +123,16 @@ fun AddPetScreen(
                 }
             }
 
-            // Pestaña que despliega el menú lateral (marcada en azul en el mockup)
-            MenuHandle(
-                expanded = menuExpanded,
-                onClick = { menuExpanded = !menuExpanded },
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(top = 176.dp)
-            )
+            // Menú lateral desplegable. Sin funcionalidad todavía: solo muestra las opciones.
+            AnimatedVisibility(
+                visible = menuExpanded,
+                enter = slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }),
+                exit = slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }),
+                modifier = Modifier.align(Alignment.CenterEnd)
+            ) {
+                PetSideMenu(onItemClick = { menuExpanded = false })
+            }
         }
-
-        // Menú lateral desplegable. Sin funcionalidad todavía: solo muestra las opciones.
-        AnimatedVisibility(
-            visible = menuExpanded,
-            enter = slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }),
-            exit = slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }),
-            modifier = Modifier.align(Alignment.CenterEnd)
-        ) {
-            PetSideMenu(onItemClick = { menuExpanded = false })
-        }
-    }
-}
-
-/**
- * Pestaña/manija en el borde derecho de la pantalla (círculo azul del mockup).
- * Al tocarla, abre o cierra el menú lateral.
- */
-@Composable
-private fun MenuHandle(
-    expanded: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
-            .width(14.dp)
-            .height(56.dp)
-            .clip(RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp))
-            .background(if (expanded) PawsyColors.Primary else PawsyColors.Primary.copy(alpha = 0.35f))
-            .clickable(onClick = onClick),
-        contentAlignment = Alignment.Center
-    ) {
-        Box(
-            modifier = Modifier
-                .width(3.dp)
-                .height(24.dp)
-                .clip(RoundedCornerShape(2.dp))
-                .background(Color.White.copy(alpha = 0.8f))
-        )
     }
 }
 
@@ -243,10 +205,6 @@ private fun PetSideMenu(
     }
 }
 
-/**
- * Campo de SOLO LECTURA: mantiene la píldora naranja del diseño,
- * pero muestra texto fijo en vez de un TextField editable.
- */
 @Composable
 private fun PetProfileField(
     label: String,
@@ -278,17 +236,18 @@ private fun PetProfileField(
 }
 
 @Composable
-private fun PawIconBadge() {
+private fun PawIconBadge(onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .size(48.dp)
             .clip(CircleShape)
-            .background(PawsyColors.IconCircleBg),
+            .background(PawsyColors.IconCircleBg)
+            .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
         Icon(
             imageVector = Icons.Filled.Pets,
-            contentDescription = "Pawsy",
+            contentDescription = "Abrir menú",
             tint = PawsyColors.Primary,
             modifier = Modifier.size(24.dp)
         )
@@ -320,9 +279,8 @@ private fun PawSubmitButton(onClick: () -> Unit) {
 
 @Preview(showBackground = true, widthDp = 320, heightDp = 700, name = "Cerrado")
 @Composable
-fun AddPetScreenPreview() {
+private fun ProfileScreenPreview() {
     MaterialTheme {
-        AddPetScreen()
+        ProfileScreen()
     }
 }
-
