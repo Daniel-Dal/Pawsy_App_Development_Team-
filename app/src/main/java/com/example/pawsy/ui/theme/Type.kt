@@ -44,5 +44,15 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     ),
 
+    labelLarge = TextStyle(
+        fontFamily = PawsyFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 25.sp,
+        lineHeight = 40.sp,
+        letterSpacing = 1.sp
+
+    )
+
+
 
 )

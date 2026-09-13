@@ -5,12 +5,14 @@
 
     <string name="titulo_pantalla5">Agregar\n Mascota</string>
     <string name="título_pantalla6">Perfil</string>
+    <string name="titulo_pantalla9">Recomendaciones</string>
 
     <string name="subtitulo_nombreMascota">Nombre</string>
     <string name="subtitulo_especieMascota">Especie</string>
     <string name="subtitulo_edadMascota">Edad</string>
     <string name="subtitulo_razaMascota">Raza</string>
     <string name="subtitulo_pesoMascota">Peso</string>
+    <string name="subtitulo_razaRecomm">Raza: </string>
 
     <string name="boton_continuar">Continuar</string>
     <string name="boton_datosUsuario">Datos Usuario</string>

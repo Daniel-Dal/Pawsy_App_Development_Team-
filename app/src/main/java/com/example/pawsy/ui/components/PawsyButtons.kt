@@ -8,6 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.TextUnit
 import com.example.pawsy.ui.theme.colorEditTextAgregarMascota
 import com.example.pawsy.ui.theme.colorBlanco
 
@@ -15,19 +17,21 @@ import com.example.pawsy.ui.theme.colorBlanco
 fun PawsyButton(
     text: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier.fillMaxWidth(),
+    modifier: Modifier = Modifier,
+    shape: Shape = RoundedCornerShape(50),
+    fontSize: TextUnit =TextUnit.Unspecified,
     containerColor: Color = colorEditTextAgregarMascota,
     contentColor: Color = colorBlanco
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier,
-        shape = RoundedCornerShape(50),
+        modifier = modifier.fillMaxWidth(),
+        shape = shape,
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,
             contentColor = contentColor
         )
     ) {
-        Text(text = text)
+        Text(text = text, fontSize = fontSize)
     }
 }
