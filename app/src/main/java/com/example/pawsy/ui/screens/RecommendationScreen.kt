@@ -1,4 +1,4 @@
-package com.example.pawsy.ui.components
+package com.example.pawsy.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,7 +29,7 @@ import com.example.pawsy.ui.theme.colorTextEditTextAgregarMascota
 @Composable
 fun MyRecommText() {
     PawsyTheme {
-        Box(                  // <- Box is now the layout structure, replacing your old top-level Column
+        Box(
             modifier = Modifier.fillMaxSize()
         ) {
             Box(modifier = Modifier.fillMaxSize().background(colorEditTextAgregarMascota))

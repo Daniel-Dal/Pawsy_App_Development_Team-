@@ -46,7 +46,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.DropdownMenu
 import com.example.pawsy.ui.components.PawsyTextField
-
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.res.painterResource
+import com.example.pawsy.ui.components.BasicCircleBotton
+import com.example.pawsy.ui.theme.colorFondoSeleccionMascotaApp
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,20 +72,37 @@ fun MyText() {
         val especieOpciones = stringArrayResource(id = R.array.opciones_especie)
         val unidades = stringArrayResource(id = R.array.opciones_unidad_peso)
 
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(colorFondoAgregarMascota)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+    Box(modifier = Modifier
+        .fillMaxSize()
         ) {
-            Text(
-                text = stringResource(id = R.string.titulo_pantalla5),
+
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .background(colorFondoAgregarMascota)
+            .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+
+        ) {
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 48.dp),
+                verticalAlignment = Alignment.CenterVertically) {
+
+                Text(text = stringResource(id = R.string.titulo_pantalla5),
                 style = MaterialTheme.typography.titleLarge,
-                color = colorBlanco,
-                modifier = Modifier.padding(top = 48.dp)
-            )
+                color = colorBlanco
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.pawsy_paw),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .rotate(105f)
+                        .padding(end = 20.dp, start = 30.dp)
+                        .size(80.dp)
+                )
+
+            }
+
 
             Text(
                 text = stringResource(id = R.string.subtitulo_nombreMascota),
@@ -103,7 +127,10 @@ fun MyText() {
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = especieExpandible) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, enabled = true),
+                        .menuAnchor(
+                            ExposedDropdownMenuAnchorType.PrimaryNotEditable,
+                            enabled = true
+                        ),
                     shape = RoundedCornerShape(24.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = colorEditTextAgregarMascota,
@@ -158,7 +185,9 @@ fun MyText() {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 PawsyTextField(
                     value = peso,
-                    onValueChange = { newValue -> if (newValue.all { it.isDigit() }) peso = newValue },
+                    onValueChange = { newValue ->
+                        if (newValue.all { it.isDigit() }) peso = newValue
+                    },
                     keyboardType = KeyboardType.Number,
                     modifier = Modifier.fillMaxWidth(0.6f)
                 )
@@ -205,6 +234,30 @@ fun MyText() {
                 Text(text = stringResource(id = R.string.boton_continuar))
             }
         }
+        BasicCircleBotton (
+            onClick = { },
+            size = 50.dp,
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(
+                    top = 20.dp,
+                    start = 20.dp
+                ),
+            backgroundColor = colorFondoSeleccionMascotaApp
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.return_arrow),
+                contentDescription = "Mascota",
+                modifier = Modifier.size(40.dp)
+                    .offset(x = (-5).dp),
+                tint = colorFondoAgregarMascota
+            )
+        }
+
+
+
+    }
+
     }
 }
 
