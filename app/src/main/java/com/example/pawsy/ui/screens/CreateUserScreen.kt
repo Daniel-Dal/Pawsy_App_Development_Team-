@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
@@ -24,6 +26,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -39,13 +43,16 @@ import com.example.pawsy.ui.theme.colorLetraInicioNombreApp
 import com.example.pawsy.ui.theme.colorRecuadroInicioSesion
 import com.example.pawsy.ui.components.PawsyTextField
 import com.example.pawsy.ui.components.ContinueBotton
+
 import com.example.pawsy.ui.theme.colorBlanco
 import com.example.pawsy.ui.theme.colorFondoAgregarMascota
 import com.example.pawsy.ui.theme.colorFondoSeleccionMascotaApp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 
 @Composable
-fun CreateUserScreen() {
+fun CreateUserScreen(navController: NavController) {
 
     Box(
         modifier = Modifier
@@ -76,6 +83,20 @@ fun CreateUserScreen() {
                 tint = colorFondoAgregarMascota
             )
         }
+
+        Image(
+            imageVector = Icons.Filled.Pets,
+            contentDescription = "Mascotas",
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .offset(
+                    y = (0).dp,
+                    x = (30).dp
+                )
+                .size(110.dp)
+                .rotate(270f),
+            colorFilter = ColorFilter.tint(colorFondoSeleccionMascotaApp)
+        )
 
         Text(
             text = "Pawsy",
@@ -121,6 +142,18 @@ fun CreateUserScreen() {
                 fontFamily = PawsyFontFamily,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
+            )
+            Image(
+                imageVector = Icons.Filled.Pets,
+                contentDescription = "Mascotas",
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(
+                        top = 54.dp,
+                        end = 40.dp
+                    )
+                    .size(50.dp),
+                colorFilter = ColorFilter.tint(colorBlanco)
             )
             Text(
                 text = "Nombre",
@@ -235,6 +268,8 @@ fun CreateUserScreen() {
             ContinueBotton(
                 onClick = {
                     // Acción del botón
+
+                    navController.navigate("AddDataUser")
                 },
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
@@ -258,12 +293,14 @@ fun CreateUserScreen() {
                 .size(200.dp)
         )
 
-    }
+        }
+
 }
 
 
 @Preview(showBackground = true)
 @Composable
 fun CreateUserScreenPreview() {
-    CreateUserScreen()
+    val navController = rememberNavController()
+    CreateUserScreen(navController)
 }

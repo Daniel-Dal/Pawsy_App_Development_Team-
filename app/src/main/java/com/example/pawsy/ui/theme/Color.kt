@@ -27,7 +27,7 @@ val colorFondoAgregarMascota = Color(0xFFEDBEA4)
 val colorEditTextAgregarMascota = Color(0xFFFE854F)
 
 val colorTextEditTextAgregarMascota = Color(0xFFC05C2E)
-
+val colorPataSeleccionMascota = Color(0xFF7FCCD7)
 val colorFondoPerfilUsuario = Color(0xFFFFF9F0)
 
 val Purple80 = Color(0xFFD0BCFF)

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "102217568416",
+    "project_id": "pawsy-7ece0",
+    "storage_bucket": "pawsy-7ece0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:102217568416:android:d11a25f090b9c0249039c5",
+        "android_client_info": {
+          "package_name": "com.example.pawsy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSPPI_W9So9eNak3s33qg73JXD1_EUvNI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
