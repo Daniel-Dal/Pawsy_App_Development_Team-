@@ -12,7 +12,8 @@
     <string name="subtitulo_edadMascota">Edad</string>
     <string name="subtitulo_razaMascota">Raza</string>
     <string name="subtitulo_pesoMascota">Peso</string>
-    <string name="subtitulo_razaRecomm">Raza: </string>
+    <string name="subtitulo_razaRecomm">Raza: %1$s</string>
+    <string name="raza_ejemplo">Golden Retriever</string>
 
     <string name="boton_continuar">Continuar</string>
     <string name="boton_datosUsuario">Datos Usuario</string>
@@ -30,5 +31,13 @@
         <item>Kg</item>
         <item>g</item>
     </string-array>
+
+   <string-array name="recomendaciones_ejemplo">
+       <item>Ejercicio diario: necesita al menos una hora de actividad al día, como caminatas largas o juegos de buscar.</item>
+       <item>Alimentación: dale croquetas de buena calidad y ajusta las porciones según su edad y peso para evitar el sobrepeso.</item>
+       <item>Cepillado: su pelaje es denso, así que cepíllalo dos o tres veces por semana para evitar nudos.</item>
+       <item>Socialización: es muy sociable, así que preséntale otras personas y mascotas desde cachorro.</item>
+       <item>Chequeos: visita al veterinario cada 6 a 12 meses y mantén al día vacunas y desparasitación.</item>
+   </string-array>
 
 </resources>
