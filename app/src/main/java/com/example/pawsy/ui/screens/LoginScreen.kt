@@ -4,7 +4,6 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -28,16 +27,29 @@ import com.example.pawsy.R
 import com.example.pawsy.ui.theme.PawsyTheme
 import kotlinx.coroutines.delay
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.pawsy.ui.theme.colorRecuadroInicioSesion
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.width
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import com.example.pawsy.ui.components.PawsyTextField
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.material3.ripple
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.foundation.BorderStroke
+import com.example.pawsy.ui.theme.pawsyColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.layout.PaddingValues
 
 @Composable
 fun LoginScreen() {
     PawsyTheme {
+        var correo by remember { mutableStateOf("") }
+        var contrasena by remember { mutableStateOf("") }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -91,7 +103,7 @@ fun LoginScreen() {
                     painter = painterResource(id = R.drawable.pawsy_doggy),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(200.dp)
+                        .size(150.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 val textAlpha = remember { Animatable(0f) }
@@ -106,7 +118,7 @@ fun LoginScreen() {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 180.dp, start = 60.dp, end = 24.dp),
+                        .padding(top = 130.dp, start = 60.dp, end = 24.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
@@ -128,7 +140,81 @@ fun LoginScreen() {
                     text = stringResource(R.string.correo),
                     modifier = Modifier
                         .alpha(textAlpha.value)
-                        .padding(top = 250.dp, end = 200.dp),
+                        .padding(top = 200.dp, end = 200.dp),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                PawsyTextField(value = correo,
+                    onValueChange = { correo = it },
+                    modifier = Modifier
+                        .padding(top = 230.dp)
+                        .fillMaxWidth(0.8f)
+                )
+                Text(
+                    text = stringResource(R.string.contrase_a),
+                    modifier = Modifier
+                        .alpha(textAlpha.value)
+                        .padding(top = 290.dp, end = 150.dp),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                PawsyTextField(value = contrasena,
+                    onValueChange = { contrasena = it },
+                    modifier = Modifier
+                        .padding(top = 320.dp)
+                        .fillMaxWidth(0.8f)
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.google),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(top = 320.dp)
+                        .size(180.dp)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = ripple(
+                                bounded = true,
+                                radius = 30.dp
+                            )
+                        ) {
+
+                        }
+                )
+                Text(
+                    text = stringResource(R.string.olvidaste_tu_contrase_a),
+                    textDecoration = TextDecoration.Underline,
+                    modifier = Modifier
+                        .alpha(textAlpha.value)
+                        .padding(top = 430.dp),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                OutlinedButton(
+                    onClick = { },
+                    modifier = Modifier
+                        .width(100.dp)
+                        .align(Alignment.BottomCenter) // posición dentro del Box: TopStart, Center, BottomEnd, etc.
+                        .padding(bottom = 35.dp),
+                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+                    shape = RoundedCornerShape(16.dp), // ahora sí con .dp, radio fijo
+                    border = BorderStroke(1.5.dp, MaterialTheme.pawsyColors.blanco),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = MaterialTheme.pawsyColors.blanco
+                    )
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.boton_continuar),
+                        fontSize = 12.sp,
+                        textDecoration = TextDecoration.Underline
+                    )
+                }
+                Text(
+                    text = "No tienes cuenta? Crear cuenta",
+                    textDecoration = TextDecoration.Underline,
+                    modifier = Modifier
+                        .alpha(textAlpha.value)
+                        .padding(top = 520.dp),
+                    fontSize = 12.sp,
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.primary
                 )
