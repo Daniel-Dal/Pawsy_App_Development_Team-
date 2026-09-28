@@ -2,33 +2,66 @@ package com.example.pawsy.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val colorFondoPerfil = Color(0xFFFFF9F0)
 
-val colorFondoInicioApp = Color(0xFFFFF9F0)
 
-val colorLetraInicioApp = Color(0xFFFE854F)
+data class PawsyColors(
+    val fondoPerfil: Color,
+    val fondoInicioApp: Color,
+    val letraInicioApp: Color,
+    val letraInicioNombreApp: Color,
+    val blanco: Color,
+    val negro: Color,
+    val recuadroInicioSesion: Color,
+    val editTextInicioSesion: Color,
+    val textEditTextInicioSesion: Color,
+    val fondoSeleccionMascotaApp: Color,
+    val fondoAgregarMascota: Color,
+    val editTextAgregarMascota: Color,
+    val textEditTextAgregarMascota: Color,
+    val fondoPerfilUsuario: Color
+)
 
-val colorLetraInicioNombreApp = Color(0xFF002D57)
+val LightPawsyColors = PawsyColors(
+    fondoPerfil = Color(0xFFFFF9F0),
+    fondoInicioApp = Color(0xFFFFF9F0),
+    letraInicioApp = Color(0xFFFE854F),
+    letraInicioNombreApp = Color(0xFF002D57),
+    blanco = Color(0xFFFFFFFF),
+    negro = Color(0xFF000000),
+    recuadroInicioSesion = Color(0xFFFF6F61),
+    editTextInicioSesion = Color(0xFFEDBEA4),
+    textEditTextInicioSesion = Color(0xFFC05C2E),
+    fondoSeleccionMascotaApp = Color(0xFFFF6F61),
+    fondoAgregarMascota = Color(0xFFEDBEA4),
+    editTextAgregarMascota = Color(0xFFFE854F),
+    textEditTextAgregarMascota = Color(0xFFC05C2E),
+    fondoPerfilUsuario = Color(0xFFFFF9F0)
+)
 
-val colorBlanco = Color(0xFFFFFFFF)
+val DarkPawsyColors = PawsyColors(
+    fondoPerfil = Color(0xFF1E1B18),
+    fondoInicioApp = Color(0xFF1E1B18),
 
-val colorNegro = Color(0xFF000000)
+    letraInicioApp = Color(0xFF7FB3E8),
+    letraInicioNombreApp = Color(0xFFB8D7F5),
 
-val colorRecuadroInicioSesion = Color(0xFFFF6F61)
+    blanco = Color(0xFFF5F1EC),
+    negro = Color(0xFFE6E1E5),
 
-val colorEditTextInicioSesion = Color(0xFFEDBEA4)
+    recuadroInicioSesion = Color(0xFF222A58),
+    editTextInicioSesion = Color(0xFF222A58),
+    textEditTextInicioSesion = Color(0xFF7FB3E8),
 
-val colorTextEditTextInicioSesion = Color(0xFFC05C2E)
+    fondoSeleccionMascotaApp = Color(0xFF222A58),
 
-val colorFondoSeleccionMascotaApp = Color(0xFFFF6F61)
+    fondoAgregarMascota = Color(0xFF222A58),
+    editTextAgregarMascota = Color(0xFF7FB3E8),
+    textEditTextAgregarMascota = Color(0xFFB8D7F5),
 
-val colorFondoAgregarMascota = Color(0xFFEDBEA4)
+    fondoPerfilUsuario = Color(0xFF1E1B18)
+)
 
-val colorEditTextAgregarMascota = Color(0xFFFE854F)
 
-val colorTextEditTextAgregarMascota = Color(0xFFC05C2E)
-
-val colorFondoPerfilUsuario = Color(0xFFFFF9F0)
 
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)

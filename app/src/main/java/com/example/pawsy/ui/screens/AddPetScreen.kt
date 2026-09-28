@@ -28,11 +28,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.ui.Alignment
-import com.example.pawsy.ui.theme.colorBlanco
-import com.example.pawsy.ui.theme.colorEditTextAgregarMascota
-import com.example.pawsy.ui.theme.colorFondoAgregarMascota
-import com.example.pawsy.ui.theme.colorLetraInicioApp
-import com.example.pawsy.ui.theme.colorTextEditTextAgregarMascota
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
@@ -53,7 +48,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import com.example.pawsy.ui.components.BasicCircleBotton
-import com.example.pawsy.ui.theme.colorFondoSeleccionMascotaApp
+import com.example.pawsy.ui.theme.pawsyColors
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -78,7 +73,7 @@ fun MyText() {
 
         Column(modifier = Modifier
             .fillMaxSize()
-            .background(colorFondoAgregarMascota)
+            .background(MaterialTheme.pawsyColors.fondoAgregarMascota)
             .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
 
@@ -90,7 +85,7 @@ fun MyText() {
 
                 Text(text = stringResource(id = R.string.titulo_pantalla5),
                 style = MaterialTheme.typography.titleLarge,
-                color = colorBlanco
+                    color = MaterialTheme.pawsyColors.blanco
                 )
                 Image(
                     painter = painterResource(id = R.drawable.pawsy_paw),
@@ -107,14 +102,14 @@ fun MyText() {
             Text(
                 text = stringResource(id = R.string.subtitulo_nombreMascota),
                 style = MaterialTheme.typography.labelSmall,
-                color = colorBlanco
+                color = MaterialTheme.pawsyColors.blanco
             )
             PawsyTextField(value = nombre, onValueChange = { nombre = it })
 
             Text(
                 text = stringResource(id = R.string.subtitulo_especieMascota),
                 style = MaterialTheme.typography.labelSmall,
-                color = colorBlanco
+                color = MaterialTheme.pawsyColors.blanco
             )
             ExposedDropdownMenuBox(
                 expanded = especieExpandible,
@@ -133,12 +128,12 @@ fun MyText() {
                         ),
                     shape = RoundedCornerShape(24.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = colorEditTextAgregarMascota,
-                        unfocusedContainerColor = colorEditTextAgregarMascota,
+                        focusedContainerColor = MaterialTheme.pawsyColors.editTextAgregarMascota,
+                        unfocusedContainerColor = MaterialTheme.pawsyColors.editTextAgregarMascota,
                         focusedBorderColor = Color.Transparent,
                         unfocusedBorderColor = Color.Transparent,
-                        focusedTextColor = colorTextEditTextAgregarMascota,
-                        unfocusedTextColor = colorTextEditTextAgregarMascota
+                        focusedTextColor = MaterialTheme.pawsyColors.textEditTextAgregarMascota,
+                        unfocusedTextColor = MaterialTheme.pawsyColors.textEditTextAgregarMascota
                     )
                 )
 
@@ -161,7 +156,7 @@ fun MyText() {
             Text(
                 text = stringResource(id = R.string.subtitulo_edadMascota),
                 style = MaterialTheme.typography.labelSmall,
-                color = colorBlanco
+                color = MaterialTheme.pawsyColors.blanco
             )
             PawsyTextField(
                 value = edad,
@@ -172,14 +167,14 @@ fun MyText() {
             Text(
                 text = stringResource(id = R.string.subtitulo_razaMascota),
                 style = MaterialTheme.typography.labelSmall,
-                color = colorBlanco
+                color = MaterialTheme.pawsyColors.blanco
             )
             PawsyTextField(value = raza, onValueChange = { raza = it })
 
             Text(
                 text = stringResource(id = R.string.subtitulo_pesoMascota),
                 style = MaterialTheme.typography.labelSmall,
-                color = colorBlanco
+                color = MaterialTheme.pawsyColors.blanco
 
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -195,10 +190,11 @@ fun MyText() {
                 Box {
                     Text(
                         text = unidadPeso,
-                        color = colorTextEditTextAgregarMascota,
+                        color = MaterialTheme.pawsyColors.textEditTextAgregarMascota,
                         modifier = Modifier
                             .clickable { unidadExpandible = true }
-                            .background(colorEditTextAgregarMascota, RoundedCornerShape(16.dp))
+                            .background(
+                                MaterialTheme.pawsyColors.editTextAgregarMascota, RoundedCornerShape(16.dp))
                             .padding(horizontal = 16.dp, vertical = 12.dp)
                     )
                     DropdownMenu(
@@ -226,9 +222,12 @@ fun MyText() {
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 24.dp),
                 shape = RoundedCornerShape(50),
-                border = BorderStroke(1.dp, colorLetraInicioApp),
+                border = BorderStroke(
+                    1.dp,
+                    MaterialTheme.pawsyColors.letraInicioApp
+                ),
                 colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = colorLetraInicioApp
+                    contentColor = MaterialTheme.pawsyColors.letraInicioApp
                 )
             ) {
                 Text(text = stringResource(id = R.string.boton_continuar))
@@ -243,14 +242,14 @@ fun MyText() {
                     top = 20.dp,
                     start = 20.dp
                 ),
-            backgroundColor = colorFondoSeleccionMascotaApp
+            backgroundColor = MaterialTheme.pawsyColors.fondoSeleccionMascotaApp
         ) {
             Icon(
                 painter = painterResource(R.drawable.return_arrow),
                 contentDescription = "Mascota",
                 modifier = Modifier.size(40.dp)
                     .offset(x = (-5).dp),
-                tint = colorFondoAgregarMascota
+                tint = MaterialTheme.pawsyColors.fondoAgregarMascota
             )
         }
 

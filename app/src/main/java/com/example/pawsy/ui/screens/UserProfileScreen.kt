@@ -24,27 +24,32 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pawsy.R
-import com.example.pawsy.ui.theme.colorFondoPerfil
-import com.example.pawsy.ui.theme.colorTextEditTextAgregarMascota
 import com.example.pawsy.ui.components.PawsyButton
 import com.example.pawsy.ui.theme.PawsyTheme
+import com.example.pawsy.ui.theme.pawsyColors
 
 @Composable
 fun MyProfileText() {
     PawsyTheme {
-        Column( modifier = Modifier
-            .fillMaxSize()
-            .background(colorFondoPerfil)
-            .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(50.dp)) {
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 48.dp),
-                verticalAlignment = Alignment.CenterVertically){
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.pawsyColors.fondoPerfil)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(50.dp)
+        ) {
 
-                Text(text = stringResource(id = R.string.título_pantalla6),
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 48.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Text(
+                    text = stringResource(id = R.string.título_pantalla6),
                     style = MaterialTheme.typography.titleLarge,
-                    color = colorTextEditTextAgregarMascota
+                    color = MaterialTheme.pawsyColors.textEditTextAgregarMascota
                 )
 
                 Image(
@@ -54,38 +59,31 @@ fun MyProfileText() {
                         .rotate(105f)
                         .offset(y = (-150).dp, x = (-40).dp)
                         .size(80.dp)
-
                 )
-
-
             }
-
 
             PawsyButton(
                 text = stringResource(id = R.string.boton_datosUsuario),
-                onClick = {/* Nothing yet */}
+                onClick = { /* Nothing yet */ }
             )
 
             PawsyButton(
                 text = stringResource(id = R.string.boton_idioma),
-                onClick = {/* Nothing yet */}
+                onClick = { /* Nothing yet */ }
             )
 
             PawsyButton(
                 text = stringResource(id = R.string.boton_notificacion),
                 fontSize = 18.sp,
-                onClick = {/* Nothing yet */},
-                modifier = Modifier.fillMaxWidth().height(100.dp),
-                shape = RoundedCornerShape(8.dp),
+                onClick = { /* Nothing yet */ },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp),
+                shape = RoundedCornerShape(8.dp)
             )
-
-        }
-
-
         }
     }
-
-
+}
 
 @Preview(
     showBackground = true,
@@ -94,6 +92,6 @@ fun MyProfileText() {
     showSystemUi = true
 )
 @Composable
-fun MyProfileTextPreview(){
+fun MyProfileTextPreview() {
     MyProfileText()
 }

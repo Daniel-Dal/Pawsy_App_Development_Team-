@@ -12,14 +12,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.pawsy.ui.theme.colorFondoAgregarMascota
+import androidx.compose.material3.MaterialTheme
+import com.example.pawsy.ui.theme.pawsyColors
 
 @Composable
 fun BasicCircleBotton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     size: Dp = 60.dp,
-    backgroundColor: Color = colorFondoAgregarMascota,
+    backgroundColor: Color = MaterialTheme.pawsyColors.fondoAgregarMascota,
     content: @Composable () -> Unit
 ) {
     Box(
