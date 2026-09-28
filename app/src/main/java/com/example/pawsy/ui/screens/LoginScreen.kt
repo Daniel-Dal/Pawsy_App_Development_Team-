@@ -28,8 +28,12 @@ import com.example.pawsy.R
 import com.example.pawsy.ui.theme.PawsyTheme
 import kotlinx.coroutines.delay
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.pawsy.ui.theme.colorRecuadroInicioSesion
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.width
 
 @Composable
 fun LoginScreen() {
@@ -71,14 +75,16 @@ fun LoginScreen() {
                     .fillMaxWidth()
                     .height(550.dp)
                     .background(
-                        color = colorRecuadroInicioSesion,
+                        color = MaterialTheme.colorScheme.surface,
                         shape = RoundedCornerShape(
                             topStart = 35.dp,
                             topEnd = 35.dp,
                             bottomStart = 0.dp,
                             bottomEnd = 0.dp
                         )
-                    )
+                    ),
+                contentAlignment = Alignment.TopCenter
+
             ) {
 
                 Image(
@@ -97,7 +103,37 @@ fun LoginScreen() {
                         animationSpec = tween(durationMillis = 500)
                     )
                 }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 180.dp, start = 60.dp, end = 24.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.iniciar_sesi_n),
+                        modifier = Modifier.alpha(textAlpha.value),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    Image(
+                        painter = painterResource(id = R.drawable.pawsy_paw_white),
+                        contentDescription = null,
+                        modifier = Modifier.size(80.dp)
+                    )
+                }
+                Text(
+                    text = stringResource(R.string.correo),
+                    modifier = Modifier
+                        .alpha(textAlpha.value)
+                        .padding(top = 250.dp, end = 200.dp),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
         }
     }
 }
+
