@@ -31,9 +31,12 @@ import com.example.pawsy.ui.theme.PawsyTheme
 import com.example.pawsy.ui.theme.pawsyColors
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+
 
 @Composable
-fun MyRecommText() {
+fun MyRecommText(navController: NavController) {
     PawsyTheme {
         val razaEjemplo = stringResource(id = R.string.raza_ejemplo)
         val recomendaciones = stringArrayResource(id = R.array.recomendaciones_ejemplo)
@@ -133,6 +136,7 @@ fun MyRecommText() {
 )
 @Composable
 fun MyRecommTextPreview() {
-    MyRecommText()
+    val navController = rememberNavController()
+    MyRecommText(navController = navController)
 }
 

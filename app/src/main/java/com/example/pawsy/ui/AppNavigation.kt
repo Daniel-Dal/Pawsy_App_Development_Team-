@@ -32,5 +32,18 @@ fun AppNavigation() {
         composable("myPets") {
             MyPetsScreen(navController)
         }
+        composable("petProfile") {
+            ProfileScreen(navController)
+        }
+        composable("userProfile") {
+            MyProfileText(navController)
+        }
+        composable("pya") {
+            RegistroPaseoActividad(navController)
+        }
+        composable("recom") {
+            MyRecommText(navController)
+        }
+
     }
 }

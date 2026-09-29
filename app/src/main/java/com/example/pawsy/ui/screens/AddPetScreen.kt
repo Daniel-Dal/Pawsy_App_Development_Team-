@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -53,30 +52,9 @@ import com.example.pawsy.ui.components.BasicCircleBotton
 import com.example.pawsy.ui.theme.pawsyColors
 
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 
-@Composable
-fun PawsyTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    keyboardType: KeyboardType = KeyboardType.Text
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.pawsyColors.editTextAgregarMascota,
-            unfocusedContainerColor = MaterialTheme.pawsyColors.editTextAgregarMascota,
-            focusedBorderColor = Color.Transparent,
-            unfocusedBorderColor = Color.Transparent,
-            focusedTextColor = MaterialTheme.pawsyColors.textEditTextAgregarMascota,
-            unfocusedTextColor = MaterialTheme.pawsyColors.textEditTextAgregarMascota
-        )
-    )
-}
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

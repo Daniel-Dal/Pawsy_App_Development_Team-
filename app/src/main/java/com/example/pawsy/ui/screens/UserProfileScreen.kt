@@ -27,9 +27,11 @@ import com.example.pawsy.R
 import com.example.pawsy.ui.components.PawsyButton
 import com.example.pawsy.ui.theme.PawsyTheme
 import com.example.pawsy.ui.theme.pawsyColors
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun MyProfileText() {
+fun MyProfileText(navController: NavController) {
     PawsyTheme {
         Column(
             modifier = Modifier
@@ -105,5 +107,6 @@ fun MyProfileText() {
 )
 @Composable
 fun MyProfileTextPreview() {
-    MyProfileText()
+    val navController = rememberNavController()
+    MyProfileText(navController = navController)
 }

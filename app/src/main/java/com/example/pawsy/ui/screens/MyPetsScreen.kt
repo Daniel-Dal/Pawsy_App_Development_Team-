@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
@@ -129,7 +127,7 @@ fun MyPetsScreen(navController: NavController) {
 
                 BasicCircleBotton(
                     onClick = {
-                        // Abrir perfil de la mascota
+                        navController.navigate("petProfile")
                     },
                     size = 120.dp,
                     backgroundColor = MaterialTheme.pawsyColors.blanco

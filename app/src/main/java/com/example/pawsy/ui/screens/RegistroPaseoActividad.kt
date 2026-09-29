@@ -25,10 +25,14 @@ import androidx.compose.ui.unit.dp
 import com.example.pawsy.R
 import com.example.pawsy.ui.theme.PawsyTheme
 import com.example.pawsy.ui.theme.pawsyColors
+import com.example.pawsy.ui.components.PetSideMenu
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 
 @Composable
 fun RegistroPaseoActividad(
+    navController: NavController,
     modifier: Modifier = Modifier,
     dias: List<String> = listOf("L", "M", "M", "J", "V", "S", "D"),
     juegos: String = "",
@@ -156,7 +160,7 @@ fun RegistroPaseoActividad(
                             contentDescription = "Pawsy",
                             modifier = Modifier
                                 .size(44.dp)
-                                .clickable(onClick = { /* pendiente: acción del botón */ })
+                                .clickable(onClick = {menuExpanded = !menuExpanded })
                         )
                     }
                 }
@@ -168,7 +172,17 @@ fun RegistroPaseoActividad(
                 exit = slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }),
                 modifier = Modifier.align(Alignment.CenterEnd)
             ) {
-                PetSideMenu(onItemClick = { menuExpanded = false })
+                PetSideMenu(
+                    onItemClick = { item ->
+                        when (item) {
+                            "Perfil mascota" -> navController.navigate("petProfile")
+                            "Perfil usuario" -> navController.navigate("userProfile")
+                            "Recomendaciones" -> navController.navigate("recom")
+
+                        }
+                    },
+                    onDismiss = { menuExpanded = false }
+                )
             }
         }
     }
@@ -177,7 +191,8 @@ fun RegistroPaseoActividad(
 @Preview(showBackground = true, widthDp = 320, heightDp = 700)
 @Composable
 private fun RegistroPaseoActividadPreview() {
+    val navController = rememberNavController()
     PawsyTheme {
-        RegistroPaseoActividad()
+        RegistroPaseoActividad(navController)
     }
 }

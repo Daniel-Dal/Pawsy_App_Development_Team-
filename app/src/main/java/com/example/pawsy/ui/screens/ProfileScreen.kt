@@ -22,9 +22,12 @@ import androidx.compose.ui.unit.dp
 import com.example.pawsy.R
 import com.example.pawsy.ui.theme.PawsyTheme
 import com.example.pawsy.ui.theme.pawsyColors
-
-
-
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.rememberDraggableState
+import com.example.pawsy.ui.components.PetSideMenu
 
 data class PetProfile(
     val nombre: String = "",
@@ -37,6 +40,7 @@ data class PetProfile(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
+    navController: NavController,
     modifier: Modifier = Modifier,
     petProfile: PetProfile = PetProfile(),
     onEditClick: () -> Unit = {}
@@ -100,7 +104,7 @@ fun ProfileScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    PawSubmitButton(onClick = onEditClick)
+                    PawSubmitButton(onClick = { menuExpanded = !menuExpanded })
                 }
             }
 
@@ -111,75 +115,22 @@ fun ProfileScreen(
                 exit = slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }),
                 modifier = Modifier.align(Alignment.CenterEnd)
             ) {
-                PetSideMenu(onItemClick = { menuExpanded = false })
-            }
-        }
-    }
-}
-
-@Composable
-fun PetSideMenu(
-    onItemClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val colors = MaterialTheme.pawsyColors
-    val menuItems = listOf(
-        "Perfil mascota",
-        "Alimentación",
-        "Salud",
-        "Paseos y actividad",
-        "Recomendaciones",
-        "Reconocimiento visual",
-        "Configuración",
-        "Salir"
-    )
-
-    Box(
-        modifier = modifier
-            .fillMaxHeight()
-            .fillMaxWidth(0.72f)
-            .clip(RoundedCornerShape(topStart = 32.dp, bottomStart = 32.dp))
-            .background(colors.recuadroInicioSesion)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 24.dp, vertical = 32.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape)
-                    .background(colors.recuadroInicioSesion),
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.ic_paw_outline),
-                    contentDescription = null,
-                    modifier = Modifier.size(28.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(28.dp))
-
-            menuItems.forEach { item ->
-                Text(
-                    text = item,
-                    color = colors.blanco,
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() },
-                            onClick = onItemClick
-                        )
-                        .padding(vertical = 10.dp)
+                PetSideMenu(
+                    onItemClick = { item ->
+                        when (item) {
+                            "Perfil usuario" -> navController.navigate("userProfile")
+                            "Paseos y actividad" -> navController.navigate("pya")
+                            "Recomendaciones" -> navController.navigate("recom")
+                        }
+                    },
+                    onDismiss = { menuExpanded = false }
                 )
             }
         }
     }
 }
+
+
 
 @Composable
 private fun PetProfileField(
@@ -245,8 +196,10 @@ private fun PawSubmitButton(
 @Preview(showBackground = true, widthDp = 320, heightDp = 700, name = "Perfil mascota")
 @Composable
 private fun ProfileScreenPreview() {
+    val navController = rememberNavController()
     PawsyTheme {
         ProfileScreen(
+            navController = navController,
             petProfile = PetProfile(
                 nombre = "",
                 especie = "",
