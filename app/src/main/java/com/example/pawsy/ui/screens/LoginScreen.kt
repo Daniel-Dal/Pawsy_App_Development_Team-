@@ -44,9 +44,10 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.navigation.NavController
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavController) {
     PawsyTheme {
         var correo by remember { mutableStateOf("") }
         var contrasena by remember { mutableStateOf("") }
@@ -213,7 +214,13 @@ fun LoginScreen() {
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier
                         .alpha(textAlpha.value)
-                        .padding(top = 520.dp),
+                        .padding(top = 520.dp)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            navController.navigate("createUser")
+                        },
                     fontSize = 12.sp,
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.primary

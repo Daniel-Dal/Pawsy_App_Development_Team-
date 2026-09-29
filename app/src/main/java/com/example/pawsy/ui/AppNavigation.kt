@@ -18,7 +18,19 @@ fun AppNavigation() {
             })
         }
         composable("menu") {
-            LoginScreen()
+            LoginScreen(navController)
+        }
+        composable("createUser") {
+            CreateUserScreen(navController)
+        }
+        composable("addDataUser") {
+            DataUser(navController)
+        }
+        composable("addPet") {
+            MyText(navController)
+        }
+        composable("myPets") {
+            MyPetsScreen(navController)
         }
     }
 }

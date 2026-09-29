@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -47,13 +48,39 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
+import androidx.navigation.compose.rememberNavController
 import com.example.pawsy.ui.components.BasicCircleBotton
 import com.example.pawsy.ui.theme.pawsyColors
 
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+
+@Composable
+fun PawsyTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    keyboardType: KeyboardType = KeyboardType.Text
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(24.dp),
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.pawsyColors.editTextAgregarMascota,
+            unfocusedContainerColor = MaterialTheme.pawsyColors.editTextAgregarMascota,
+            focusedBorderColor = Color.Transparent,
+            unfocusedBorderColor = Color.Transparent,
+            focusedTextColor = MaterialTheme.pawsyColors.textEditTextAgregarMascota,
+            unfocusedTextColor = MaterialTheme.pawsyColors.textEditTextAgregarMascota
+        )
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyText() {
+fun MyText(navController: NavController) {
     PawsyTheme {
         var nombre by remember { mutableStateOf("") }
         var especie by remember { mutableStateOf("") }
@@ -76,7 +103,6 @@ fun MyText() {
             .background(MaterialTheme.pawsyColors.fondoAgregarMascota)
             .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
-
         ) {
             Row(modifier = Modifier
                 .fillMaxWidth()
@@ -216,7 +242,10 @@ fun MyText() {
 
 
             OutlinedButton(
-                onClick = { /* nothing yet */ },
+                onClick = {
+                /* nothing yet */
+                    navController.navigate("myPets")
+                },
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
                     .align(Alignment.CenterHorizontally)
@@ -272,5 +301,6 @@ fun MyText() {
 )
 @Composable
 fun MyTextPreview() {
-    MyText()
+    val navController = rememberNavController()
+    MyText(navController)
 }

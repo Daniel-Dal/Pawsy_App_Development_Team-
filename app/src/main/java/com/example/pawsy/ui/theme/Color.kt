@@ -54,14 +54,18 @@ val DarkPawsyColors = PawsyColors(
 
     fondoSeleccionMascotaApp = Color(0xFF222A58),
 
-    fondoAgregarMascota = Color(0xFF222A58),
+    fondoAgregarMascota = Color(0xFF374EA2),
     editTextAgregarMascota = Color(0xFF7FB3E8),
     textEditTextAgregarMascota = Color(0xFFB8D7F5),
 
     fondoPerfilUsuario = Color(0xFF1E1B18)
 )
 
+val colorEditTextAgregarMascota = Color(0xFFFE854F)
 
+val colorTextEditTextAgregarMascota = Color(0xFFC05C2E)
+val colorPataSeleccionMascota = Color(0xFF7FCCD7)
+val colorFondoPerfilUsuario = Color(0xFFFFF9F0)
 
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
@@ -90,11 +94,3 @@ val colorTextEditTextInicioSesion = Color(0xFFC05C2E)
 val colorFondoSeleccionMascotaApp = Color(0xFFFF6F61)
 
 val colorFondoAgregarMascota = Color(0xFFEDBEA4)
-
-val colorEditTextAgregarMascota = Color(0xFFFE854F)
-
-val colorTextEditTextAgregarMascota = Color(0xFFC05C2E)
-val colorPataSeleccionMascota = Color(0xFF7FCCD7)
-val colorFondoPerfilUsuario = Color(0xFFFFF9F0)
-
-

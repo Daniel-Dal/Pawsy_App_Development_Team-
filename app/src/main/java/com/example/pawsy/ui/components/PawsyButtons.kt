@@ -15,11 +15,9 @@ import com.example.pawsy.ui.theme.pawsyColors
 
 @Composable
 fun PawsyButton(
-    text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(50),
-    fontSize: TextUnit = TextUnit.Unspecified,
     containerColor: Color = MaterialTheme.pawsyColors.editTextAgregarMascota,
     contentColor: Color = MaterialTheme.pawsyColors.blanco
 ) {
@@ -32,9 +30,5 @@ fun PawsyButton(
             contentColor = contentColor
         )
     ) {
-        Text(
-            text = text,
-            fontSize = fontSize
-        )
     }
 }

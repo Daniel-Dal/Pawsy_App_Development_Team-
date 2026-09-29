@@ -22,7 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+
 import com.example.pawsy.R
 import com.example.pawsy.ui.components.PawsyButton
 import com.example.pawsy.ui.theme.PawsyTheme
@@ -36,7 +36,7 @@ fun MyProfileText() {
                 .fillMaxSize()
                 .background(MaterialTheme.pawsyColors.fondoPerfil)
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(50.dp)
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
 
             Row(
@@ -62,19 +62,31 @@ fun MyProfileText() {
                 )
             }
 
+            Text( text = stringResource(id = R.string.boton_datosUsuario),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.pawsyColors.textEditTextAgregarMascota)
+
             PawsyButton(
-                text = stringResource(id = R.string.boton_datosUsuario),
+
                 onClick = { /* Nothing yet */ }
             )
 
+            Text( text = stringResource(id = R.string.boton_idioma),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.pawsyColors.textEditTextAgregarMascota)
+
             PawsyButton(
-                text = stringResource(id = R.string.boton_idioma),
+
                 onClick = { /* Nothing yet */ }
             )
 
+            Text( text = stringResource(id = R.string.boton_notificacion),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.pawsyColors.textEditTextAgregarMascota)
+
             PawsyButton(
-                text = stringResource(id = R.string.boton_notificacion),
-                fontSize = 18.sp,
+
+
                 onClick = { /* Nothing yet */ },
                 modifier = Modifier
                     .fillMaxWidth()
