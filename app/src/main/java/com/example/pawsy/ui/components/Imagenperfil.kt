@@ -14,17 +14,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.pawsy.ui.theme.colorEditTextAgregarMascota
-import com.example.pawsy.ui.theme.colorBlanco
+import com.example.pawsy.ui.theme.pawsyColors
+
 
 @Composable
 fun ImagenPerfil(
     imagenSeleccionada: Uri?,
     onImagenSeleccionada: (Uri?) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    calendarColor: Color = MaterialTheme.pawsyColors.fondoAgregarMascota
 ) {
 
     val selectorImagen = rememberLauncherForActivityResult(
@@ -37,7 +39,7 @@ fun ImagenPerfil(
         modifier = modifier
             .size(140.dp)
             .clip(CircleShape)
-            .background(colorEditTextAgregarMascota)
+            .background(calendarColor)
             .clickable {
                 selectorImagen.launch("image/*")
             },
@@ -59,7 +61,7 @@ fun ImagenPerfil(
 
             Text(
                 text = "Agregar\nimagen",
-                color = colorBlanco,
+                color = MaterialTheme.pawsyColors.blanco,
                 style = MaterialTheme.typography.labelLarge
             )
         }

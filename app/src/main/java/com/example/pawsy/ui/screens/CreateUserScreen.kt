@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,15 +39,10 @@ import androidx.compose.ui.unit.sp
 import com.example.pawsy.R
 import com.example.pawsy.ui.components.BasicCircleBotton
 import com.example.pawsy.ui.theme.PawsyFontFamily
-import com.example.pawsy.ui.theme.colorFondoPerfilUsuario
-import com.example.pawsy.ui.theme.colorLetraInicioNombreApp
-import com.example.pawsy.ui.theme.colorRecuadroInicioSesion
+import com.example.pawsy.ui.theme.pawsyColors
 import com.example.pawsy.ui.components.PawsyTextField
 import com.example.pawsy.ui.components.ContinueBotton
 
-import com.example.pawsy.ui.theme.colorBlanco
-import com.example.pawsy.ui.theme.colorFondoAgregarMascota
-import com.example.pawsy.ui.theme.colorFondoSeleccionMascotaApp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 
@@ -57,7 +53,7 @@ fun CreateUserScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorFondoPerfilUsuario)
+            .background(MaterialTheme.pawsyColors.fondoPerfil)
     ) {
         var nombre by remember { mutableStateOf("") }
         var correo by remember { mutableStateOf("") }
@@ -73,19 +69,19 @@ fun CreateUserScreen(navController: NavController) {
                     top = 30.dp,
                     start = 20.dp
                 ),
-            backgroundColor = colorFondoSeleccionMascotaApp
+            backgroundColor = MaterialTheme.pawsyColors.fondoSeleccionMascotaApp
         ) {
             Icon(
                 painter = painterResource(R.drawable.return_arrow),
                 contentDescription = "Mascota",
                 modifier = Modifier.size(40.dp)
                     .offset(x = (-5).dp),
-                tint = colorFondoAgregarMascota
+                tint = MaterialTheme.pawsyColors.fondoAgregarMascota
             )
         }
 
         Image(
-            imageVector = Icons.Filled.Pets,
+            painter = painterResource(id = R.drawable.pawsy_paw_white),
             contentDescription = "Mascotas",
             modifier = Modifier
                 .align(Alignment.TopEnd)
@@ -93,9 +89,8 @@ fun CreateUserScreen(navController: NavController) {
                     y = (0).dp,
                     x = (30).dp
                 )
-                .size(110.dp)
-                .rotate(270f),
-            colorFilter = ColorFilter.tint(colorFondoSeleccionMascotaApp)
+                .size(110.dp),
+            colorFilter = ColorFilter.tint(MaterialTheme.pawsyColors.fondoSeleccionMascotaApp)
         )
 
         Text(
@@ -108,7 +103,7 @@ fun CreateUserScreen(navController: NavController) {
             fontSize = 60.sp,
             fontFamily = PawsyFontFamily,
             fontWeight = FontWeight.ExtraBold,
-            color = colorLetraInicioNombreApp
+            color = MaterialTheme.pawsyColors.letraInicioNombreApp
         )
 
 
@@ -119,7 +114,7 @@ fun CreateUserScreen(navController: NavController) {
                 .height(550.dp)
                 .align(Alignment.BottomCenter)
                 .background(
-                    color = colorRecuadroInicioSesion,
+                    color = MaterialTheme.pawsyColors.recuadroInicioSesion,
                     shape = RoundedCornerShape(
                         topStart = 35.dp,
                         topEnd = 35.dp,
@@ -141,10 +136,10 @@ fun CreateUserScreen(navController: NavController) {
                 fontSize = 28.sp,
                 fontFamily = PawsyFontFamily,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = MaterialTheme.pawsyColors.blanco
             )
             Image(
-                imageVector = Icons.Filled.Pets,
+                painter = painterResource(id = R.drawable.pawsy_paw_white),
                 contentDescription = "Mascotas",
                 modifier = Modifier
                     .align(Alignment.TopEnd)
@@ -152,8 +147,9 @@ fun CreateUserScreen(navController: NavController) {
                         top = 54.dp,
                         end = 40.dp
                     )
-                    .size(50.dp),
-                colorFilter = ColorFilter.tint(colorBlanco)
+                    .size(50.dp)
+                    .rotate(90f),
+                colorFilter = ColorFilter.tint(MaterialTheme.pawsyColors.blanco)
             )
             Text(
                 text = "Nombre",
@@ -166,7 +162,7 @@ fun CreateUserScreen(navController: NavController) {
                 fontSize = 20.sp,
                 fontFamily = PawsyFontFamily,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = MaterialTheme.pawsyColors.blanco
             )
             PawsyTextField(
                 value = nombre,
@@ -176,8 +172,8 @@ fun CreateUserScreen(navController: NavController) {
                     .padding(
                         top = 150.dp
                     ).width(330.dp),
-                containerColor = colorFondoAgregarMascota,
-                textColor =colorRecuadroInicioSesion
+                containerColor = MaterialTheme.pawsyColors.fondoAgregarMascota,
+                textColor =MaterialTheme.pawsyColors.textEditTextAgregarMascota
             )
 
             Text(
@@ -191,7 +187,7 @@ fun CreateUserScreen(navController: NavController) {
                 fontSize = 20.sp,
                 fontFamily = PawsyFontFamily,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = MaterialTheme.pawsyColors.blanco
             )
             PawsyTextField(
                 value = correo,
@@ -201,8 +197,8 @@ fun CreateUserScreen(navController: NavController) {
                     .padding(
                         top = 250.dp
                     ).width(330.dp),
-                containerColor = colorFondoAgregarMascota,
-                textColor =colorRecuadroInicioSesion
+                containerColor = MaterialTheme.pawsyColors.fondoAgregarMascota,
+                textColor =MaterialTheme.pawsyColors.textEditTextAgregarMascota
             )
             Text(
                 text = "Contraseña",
@@ -215,7 +211,7 @@ fun CreateUserScreen(navController: NavController) {
                 fontSize = 20.sp,
                 fontFamily = PawsyFontFamily,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = MaterialTheme.pawsyColors.blanco
             )
             PawsyTextField(
                 value = contrasena,
@@ -225,8 +221,8 @@ fun CreateUserScreen(navController: NavController) {
                     .padding(
                         top = 350.dp
                     ).width(330.dp),
-                containerColor = colorFondoAgregarMascota,
-                textColor =colorRecuadroInicioSesion
+                containerColor = MaterialTheme.pawsyColors.fondoAgregarMascota,
+                textColor =MaterialTheme.pawsyColors.textEditTextAgregarMascota
             )
 
             Row(
@@ -243,15 +239,15 @@ fun CreateUserScreen(navController: NavController) {
                     onCheckedChange = { aceptado = it },
                     modifier = Modifier.size(24.dp),
                     colors = CheckboxDefaults.colors(
-                        checkedColor = Color.Black,
+                        checkedColor = Color.White,
                         uncheckedColor = Color.White,
-                        checkmarkColor = Color.White
+                        checkmarkColor = Color.Black
                     )
                 )
 
                 Text(
                     text = " Aceptar ",
-                    color = Color.White,
+                    color = MaterialTheme.pawsyColors.blanco,
                     fontSize = 16.sp
                 )
                 Text(
@@ -260,7 +256,7 @@ fun CreateUserScreen(navController: NavController) {
                         .clickable {
                             // Acción al hacer clic
                         },
-                    color = Color.White,
+                    color = MaterialTheme.pawsyColors.blanco,
                     textDecoration = TextDecoration.Underline,
                     fontSize = 16.sp
                 )
@@ -275,8 +271,8 @@ fun CreateUserScreen(navController: NavController) {
                     .fillMaxWidth(0.6f)
                     .align(Alignment.TopCenter)
                     .padding(top = 460.dp),
-                textColor = colorBlanco,
-                borderColor = colorBlanco,
+                textColor = MaterialTheme.pawsyColors.blanco,
+                borderColor = MaterialTheme.pawsyColors.blanco,
                 borderWidth = 5.dp
             ) {
                 Text(

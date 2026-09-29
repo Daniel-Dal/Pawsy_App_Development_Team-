@@ -18,6 +18,8 @@ import com.example.pawsy.ui.screens.CreateUserScreen
 import com.example.pawsy.ui.screens.DataUser
 import com.example.pawsy.ui.theme.PawsyTheme
 import com.example.pawsy.ui.screens.MyPetsScreen
+import com.example.pawsy.ui.screens.MyText
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +51,13 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable("addDataUser") {
-                        DataUser()
+                        DataUser(navController)
+                    }
+                    composable("addPet") {
+                        MyText(navController)
+                    }
+                    composable("myPets") {
+                        MyPetsScreen(navController)
                     }
                 }
             }

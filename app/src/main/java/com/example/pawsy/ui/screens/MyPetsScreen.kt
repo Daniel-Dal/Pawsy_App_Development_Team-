@@ -31,18 +31,17 @@ import androidx.compose.ui.unit.sp
 import com.example.pawsy.R
 import com.example.pawsy.ui.components.BasicCircleBotton
 import com.example.pawsy.ui.theme.PawsyFontFamily
-import com.example.pawsy.ui.theme.colorBlanco
-import com.example.pawsy.ui.theme.colorFondoAgregarMascota
-import com.example.pawsy.ui.theme.colorFondoSeleccionMascotaApp
 import com.example.pawsy.ui.theme.colorPataSeleccionMascota
 import com.example.pawsy.model.Mascota
 import androidx.compose.foundation.lazy.grid.items
-
-
+import androidx.compose.material3.MaterialTheme
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.pawsy.ui.theme.pawsyColors
 
 
 @Composable
-fun MyPetsScreen() {
+fun MyPetsScreen(navController: NavController) {
     val mascotas = listOf(
         Mascota("1", "Max", R.drawable.perro1),
         Mascota("2", "Luna", R.drawable.gato),
@@ -51,7 +50,7 @@ fun MyPetsScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorFondoSeleccionMascotaApp)
+            .background(MaterialTheme.pawsyColors.fondoSeleccionMascotaApp)
     ) {
 
         BasicCircleBotton (
@@ -63,14 +62,14 @@ fun MyPetsScreen() {
                     top = 30.dp,
                     start = 20.dp
                 ),
-            backgroundColor = colorFondoAgregarMascota
+            backgroundColor = MaterialTheme.pawsyColors.fondoAgregarMascota
         ) {
             Icon(
                 painter = painterResource(R.drawable.return_arrow),
                 contentDescription = "Regreso",
                 modifier = Modifier.size(40.dp)
                     .offset(x = (-5).dp),
-                tint = colorFondoSeleccionMascotaApp
+                tint = MaterialTheme.pawsyColors.fondoSeleccionMascotaApp
             )
         }
 
@@ -85,7 +84,7 @@ fun MyPetsScreen() {
             fontSize = 50.sp,
             fontFamily = PawsyFontFamily,
             fontWeight = FontWeight.ExtraBold,
-            color = colorBlanco
+            color = MaterialTheme.pawsyColors.blanco
         )
 
         Text(
@@ -99,7 +98,7 @@ fun MyPetsScreen() {
             fontSize = 50.sp,
             fontFamily = PawsyFontFamily,
             fontWeight = FontWeight.ExtraBold,
-            color = colorBlanco
+            color = MaterialTheme.pawsyColors.blanco
         )
         Image(
             imageVector = Icons.Filled.Pets,
@@ -133,7 +132,7 @@ fun MyPetsScreen() {
                         // Abrir perfil de la mascota
                     },
                     size = 120.dp,
-                    backgroundColor = colorBlanco
+                    backgroundColor = MaterialTheme.pawsyColors.blanco
                 ) {
                     Image(
                         painter = painterResource(mascota.imagen),
@@ -150,15 +149,15 @@ fun MyPetsScreen() {
             item {
                 BasicCircleBotton(
                     onClick = {
-                        // Ir a agregar mascota
+                        navController.navigate("addPet")
                     },
                     size = 120.dp,
-                    backgroundColor = colorFondoAgregarMascota
+                    backgroundColor = MaterialTheme.pawsyColors.fondoAgregarMascota
                 ) {
                     Text(
                         text = "+",
                         fontSize = 60.sp,
-                        color = colorFondoSeleccionMascotaApp
+                        color = MaterialTheme.pawsyColors.fondoSeleccionMascotaApp
                     )
                 }
             }
@@ -173,5 +172,6 @@ fun MyPetsScreen() {
 @Preview(showBackground = true)
 @Composable
 fun MyPetsScreenPreview() {
-    MyPetsScreen()
+    val navController = rememberNavController()
+    MyPetsScreen(navController)
 }

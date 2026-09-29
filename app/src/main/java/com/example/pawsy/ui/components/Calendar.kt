@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -20,8 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.pawsy.ui.theme.colorEditTextAgregarMascota
-import com.example.pawsy.ui.theme.colorTextEditTextAgregarMascota
+import com.example.pawsy.ui.theme.pawsyColors
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -31,8 +31,8 @@ fun Calendario(
     fecha: String,
     onFechaSeleccionada: (String) -> Unit,
     modifier: Modifier = Modifier,
-    containerColor: Color = colorEditTextAgregarMascota,
-    textColor: Color = colorTextEditTextAgregarMascota
+    textColor: Color = MaterialTheme.pawsyColors.editTextAgregarMascota,
+    calendarColor: Color = MaterialTheme.pawsyColors.editTextAgregarMascota
 ) {
     var mostrarCalendario by remember { mutableStateOf(false) }
 
@@ -55,7 +55,7 @@ fun Calendario(
             shape = RoundedCornerShape(24.dp),
 
             colors = OutlinedTextFieldDefaults.colors(
-                disabledContainerColor = containerColor,
+                disabledContainerColor = calendarColor,
                 disabledBorderColor = Color.Transparent,
                 disabledTextColor = textColor
             )
