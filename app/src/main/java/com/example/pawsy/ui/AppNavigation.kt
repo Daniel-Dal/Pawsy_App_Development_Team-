@@ -44,6 +44,10 @@ fun AppNavigation() {
         composable("recom") {
             MyRecommText(navController)
         }
+        composable("VerifyEmail") {
+            VerifyEmailScreen(navController = navController)
+        }
+
 
     }
 }

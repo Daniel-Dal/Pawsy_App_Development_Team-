@@ -12,7 +12,12 @@
           "package_name": "com.example.pawsy"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "102217568416-1srt4pm9r5bbrq3rk83s3e396mtbiqk7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCSPPI_W9So9eNak3s33qg73JXD1_EUvNI"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "102217568416-1srt4pm9r5bbrq3rk83s3e396mtbiqk7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

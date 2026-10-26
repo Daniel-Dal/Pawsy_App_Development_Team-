@@ -19,14 +19,18 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.pawsy.ui.theme.pawsyColors
-
+import androidx.compose.foundation.border
+import androidx.compose.ui.unit.Dp
 
 @Composable
 fun ImagenPerfil(
     imagenSeleccionada: Uri?,
     onImagenSeleccionada: (Uri?) -> Unit,
     modifier: Modifier = Modifier,
-    calendarColor: Color = MaterialTheme.pawsyColors.fondoAgregarMascota
+    calendarColor: Color = MaterialTheme.pawsyColors.fondoAgregarMascota,
+    colorBorde: Color = Color(0xFFFFC857),
+    colorTexto: Color = Color.White,
+    tamanio: Dp = 100.dp
 ) {
 
     val selectorImagen = rememberLauncherForActivityResult(
@@ -37,14 +41,19 @@ fun ImagenPerfil(
 
     Box(
         modifier = modifier
-            .size(140.dp)
+            .size(tamanio)
             .clip(CircleShape)
             .background(calendarColor)
+            .border(
+                width = 2.dp,
+                color = colorBorde,
+                shape = CircleShape
+            )
             .clickable {
                 selectorImagen.launch("image/*")
             },
         contentAlignment = Alignment.Center
-    ) {
+    )  {
 
         if (imagenSeleccionada != null) {
 
@@ -52,7 +61,7 @@ fun ImagenPerfil(
                 model = imagenSeleccionada,
                 contentDescription = "Imagen de perfil",
                 modifier = Modifier
-                    .size(140.dp)
+                    .size(tamanio)
                     .clip(CircleShape),
                 contentScale = ContentScale.Crop
             )
@@ -60,9 +69,9 @@ fun ImagenPerfil(
         } else {
 
             Text(
-                text = "Agregar\nimagen",
-                color = MaterialTheme.pawsyColors.blanco,
-                style = MaterialTheme.typography.labelLarge
+                text = "Agregar",
+                color = colorTexto,
+                style = MaterialTheme.typography.labelSmall
             )
         }
     }
