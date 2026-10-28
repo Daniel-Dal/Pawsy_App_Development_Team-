@@ -21,10 +21,12 @@ val supabaseKey: String = propiedadesLocales.getProperty(
     "SUPABASE_KEY",
     propiedadesLocales.getProperty("SUPABASE_ANON_KEY", "")
 )
+
 val localProps = Properties().apply {
     val file = rootProject.file("local.properties")
     if (file.exists()) load(file.inputStream())
 }
+
 android {
     namespace = "com.example.pawsy"
     compileSdk = 37
@@ -58,7 +60,16 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
         isCoreLibraryDesugaringEnabled = true
     }
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file("debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
+    }
 }
+
 @Suppress("DuplicatePlatformClasses")
 dependencies {
     implementation(libs.androidx.core.splashscreen)
@@ -67,6 +78,7 @@ dependencies {
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(platform(libs.firebase.bom))
+    implementation("com.google.firebase:firebase-ai")
 
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
@@ -97,6 +109,9 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.kotlinx.coroutines.play.services)
 
+    // Mapa
+    implementation("org.osmdroid:osmdroid-android:6.1.20")
+
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
@@ -105,6 +120,4 @@ dependencies {
 
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-
-    implementation("org.osmdroid:osmdroid-android:6.1.20")
 }

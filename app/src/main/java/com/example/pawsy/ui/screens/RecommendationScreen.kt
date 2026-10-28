@@ -1,8 +1,12 @@
 
 package com.example.pawsy.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,13 +37,44 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-
-
+import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.graphics.painter.Painter
+import com.example.pawsy.ui.components.PetSideMenu
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.DocumentSnapshot
 @Composable
-fun MyRecommText(navController: NavController) {
+fun MyRecommText(navController: NavController, breedId: String, edad: Int, mascotaId: String? = null) {
     PawsyTheme {
-        val razaEjemplo = stringResource(id = R.string.raza_ejemplo)
-        val recomendaciones = stringArrayResource(id = R.array.recomendaciones_ejemplo)
+        var menuExpanded by remember { mutableStateOf(false) }
+        var razaEjemplo by remember { mutableStateOf("") }
+        var recomendaciones by remember { mutableStateOf<List<String>>(emptyList()) }
+        var recomPorRango by remember { mutableStateOf<Map<String, List<String>>>(emptyMap()) }
+
+        val rango = when {
+            edad <= 1 -> "0-1"
+            edad <= 7 -> "2-7"
+            else -> "8+"
+        }
+        LaunchedEffect(breedId) {
+            android.util.Log.d("PAWSY", "breedId recibido = '$breedId'")
+            FirebaseFirestore.getInstance().collection("razas").document(breedId).get()
+                .addOnSuccessListener { doc: DocumentSnapshot ->
+                    razaEjemplo = doc.getString("nombre") ?: ""
+                    val mapa = doc.get("recomendaciones") as? Map<*, *>
+                    recomPorRango = mapa?.entries?.associate { (k, v) ->
+                        k.toString() to ((v as? List<*>)?.filterIsInstance<String>() ?: emptyList())
+                    } ?: emptyMap()
+                }
+                .addOnFailureListener { e ->
+                    android.util.Log.e("PAWSY", "Error Firestore", e)
+                }
+        }
 
         Box(
             modifier = Modifier.fillMaxSize()
@@ -114,7 +149,7 @@ fun MyRecommText(navController: NavController) {
                         verticalArrangement = Arrangement.spacedBy(50.dp)
                     ) {
 
-                        recomendaciones.forEach { recomendacion ->
+                        (recomPorRango[rango] ?: emptyList()).forEach { recomendacion ->
                             Text(
                                 text = recomendacion,
                                 style = MaterialTheme.typography.bodyLarge,
@@ -123,10 +158,65 @@ fun MyRecommText(navController: NavController) {
                         }
                     }
                 }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    PawSubmitButton(
+                        onClick = { menuExpanded = !menuExpanded }
+                    )
+                }
+            }
+
+            AnimatedVisibility(
+                visible = menuExpanded,
+                enter = slideInHorizontally(
+                    initialOffsetX = { fullWidth -> fullWidth }
+                ),
+                exit = slideOutHorizontally(
+                    targetOffsetX = { fullWidth -> fullWidth }
+                ),
+                modifier = Modifier.align(Alignment.CenterEnd)
+            ) {
+                PetSideMenu(
+                    onItemClick = { item ->
+                        when (item) {
+                            "Perfil mascota" -> {
+                                val id = mascotaId ?: MascotaSeleccionada.id
+                                if (id != null) {
+                                    navController.navigate("petProfile/$id")
+                                } else {
+                                    navController.navigate("myPets")
+                                }
+                            }
+                            "Perfil usuario" -> navController.navigate("userProfile")
+                            "Paseos y actividad" -> navController.navigate("pya")
+                            "Veterinarias cercanas" -> navController.navigate("nearbyVets")
+                            "Reconocimiento visual" -> navController.navigate("food")
+                            "Eventos" -> navController.navigate("eventos")
+                        }
+                    },
+                    onDismiss = { menuExpanded = false }
+                )
             }
         }
     }
 }
+
+@Composable
+private fun PawSubmitButton(
+    onClick: () -> Unit,
+    pawImage: Painter = painterResource(R.drawable.ic_paw_menu)
+) {
+    Image(
+        painter = pawImage,
+        contentDescription = "Guardar perfil",
+        modifier = Modifier
+            .size(33.dp)
+            .clickable(onClick = onClick)
+    )
+}
+
 
 @Preview(
     showBackground = true,
@@ -137,6 +227,6 @@ fun MyRecommText(navController: NavController) {
 @Composable
 fun MyRecommTextPreview() {
     val navController = rememberNavController()
-    MyRecommText(navController = navController)
+    MyRecommText(navController = navController, breedId = "", edad = 3)
 }
 

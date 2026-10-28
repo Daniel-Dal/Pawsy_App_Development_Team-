@@ -113,8 +113,8 @@ fun MyPetsScreen(navController: NavController) {
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(
-                    top = 30.dp,
-                    start = 20.dp
+                    top = 645.dp,
+                    start = 300.dp
                 ),
             backgroundColor = MaterialTheme.pawsyColors.fondoAgregarMascota
         ) {
@@ -186,6 +186,7 @@ fun MyPetsScreen(navController: NavController) {
 
                 BasicCircleBotton(
                     onClick = {
+                        MascotaSeleccionada.id = mascota.id
                         navController.navigate("petProfile/${mascota.id}")
                     },
                     size = 120.dp,

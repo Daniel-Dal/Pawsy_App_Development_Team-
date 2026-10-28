@@ -77,6 +77,7 @@ fun ProfileScreen(
     var mensajeError by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(mascotaId) {
+        if (mascotaId != null) MascotaSeleccionada.id = mascotaId
         if (mascotaId == null) {
             cargando = false
             return@LaunchedEffect
@@ -153,32 +154,27 @@ fun ProfileScreen(
                         Spacer(modifier = Modifier.height(20.dp))
                     }
 
-                    // Campos de solo lectura con los datos traídos de Firestore
                     PetProfileField(label = "Nombre", value = petProfile.nombre)
-
                     Spacer(modifier = Modifier.height(20.dp))
 
                     PetProfileField(label = "Especie", value = petProfile.especie)
-
                     Spacer(modifier = Modifier.height(20.dp))
 
                     PetProfileField(label = "Edad", value = petProfile.edad)
-
                     Spacer(modifier = Modifier.height(20.dp))
 
                     PetProfileField(label = "Raza", value = petProfile.raza)
-
                     Spacer(modifier = Modifier.height(20.dp))
 
                     PetProfileField(label = "Peso", value = petProfile.peso)
-
                     Spacer(modifier = Modifier.height(48.dp))
 
-                    // Botón de historias médicas
                     Box(contentAlignment = Alignment.Center) {
                         PawsyButton(
                             onClick = {
-                                if (mascotaId != null) navController.navigate("historias/$mascotaId")
+                                if (mascotaId != null) {
+                                    navController.navigate("historias/$mascotaId")
+                                }
                             },
                             modifier = Modifier.height(56.dp)
                         )
@@ -191,12 +187,13 @@ fun ProfileScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Botón flotante inferior derecho (huella)
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
                     ) {
-                        PawSubmitButton(onClick = { menuExpanded = !menuExpanded })
+                        PawSubmitButton(
+                            onClick = { menuExpanded = !menuExpanded }
+                        )
                     }
                 }
             }
@@ -205,8 +202,12 @@ fun ProfileScreen(
         // Menú lateral desplegable
         AnimatedVisibility(
             visible = menuExpanded,
-            enter = slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }),
-            exit = slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }),
+            enter = slideInHorizontally(
+                initialOffsetX = { fullWidth -> fullWidth }
+            ),
+            exit = slideOutHorizontally(
+                targetOffsetX = { fullWidth -> fullWidth }
+            ),
             modifier = Modifier.align(Alignment.CenterEnd)
         ) {
             PetSideMenu(
@@ -216,7 +217,8 @@ fun ProfileScreen(
                         "Paseos y actividad" -> navController.navigate("pya")
                         "Recomendaciones" -> navController.navigate("recom")
                         "Veterinarias cercanas" -> navController.navigate("nearbyVets")
-
+                        "Reconocimiento visual" -> navController.navigate("food")
+                        "Eventos" -> navController.navigate("eventos")
                     }
                 },
                 onDismiss = { menuExpanded = false }
@@ -275,13 +277,13 @@ private fun PawIconBadge(
 @Composable
 private fun PawSubmitButton(
     onClick: () -> Unit,
-    pawImage: Painter = painterResource(R.drawable.ic_paw_outline)
+    pawImage: Painter = painterResource(R.drawable.ic_paw_menu)
 ) {
     Image(
         painter = pawImage,
         contentDescription = "Guardar perfil",
         modifier = Modifier
-            .size(44.dp)
+            .size(70.dp)
             .clickable(onClick = onClick)
     )
 }
