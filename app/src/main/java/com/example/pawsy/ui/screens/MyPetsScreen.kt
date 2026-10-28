@@ -1,9 +1,14 @@
 package com.example.pawsy.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -38,6 +43,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.pawsy.R
 import com.example.pawsy.ui.components.BasicCircleBotton
+import com.example.pawsy.ui.components.PetSideMenu
 import com.example.pawsy.ui.theme.PawsyFontFamily
 import com.example.pawsy.ui.theme.colorPataSeleccionMascota
 import com.example.pawsy.ui.theme.pawsyColors
@@ -90,6 +96,7 @@ fun MyPetsScreen(navController: NavController) {
     var mascotas by remember { mutableStateOf<List<MascotaItem>>(emptyList()) }
     var cargando by remember { mutableStateOf(true) }
     var mensajeError by remember { mutableStateOf<String?>(null) }
+    var menuExpanded by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         try {
@@ -128,6 +135,17 @@ fun MyPetsScreen(navController: NavController) {
             )
         }
 
+        // Ícono que abre el menú lateral (igual que en ProfileScreen)
+        Image(
+            painter = painterResource(R.drawable.ic_paw_orange),
+            contentDescription = "Abrir menú",
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(top = 32.dp, end = 24.dp)
+                .size(40.dp)
+                .clickable { menuExpanded = !menuExpanded }
+        )
+
         Text(
             text = "Tus ",
             modifier = Modifier
@@ -162,7 +180,7 @@ fun MyPetsScreen(navController: NavController) {
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(
-                    top = 180.dp,
+                    top = 140.dp,
                     end = 40.dp
                 )
                 .size(80.dp),
@@ -178,6 +196,8 @@ fun MyPetsScreen(navController: NavController) {
                     start = 30.dp,
                     end = 30.dp
                 ),
+            // Espacio al final para que la huella de abajo no tape el último elemento
+            contentPadding = PaddingValues(bottom = 100.dp),
             horizontalArrangement = Arrangement.spacedBy(30.dp),
             verticalArrangement = Arrangement.spacedBy(30.dp)
         ) {
@@ -248,6 +268,37 @@ fun MyPetsScreen(navController: NavController) {
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(24.dp)
+            )
+        }
+
+        // Huella inferior (igual que en ProfileScreen): también abre el menú
+        Image(
+            painter = painterResource(R.drawable.ic_paw_outline),
+            contentDescription = "Abrir menú",
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 24.dp, bottom = 32.dp)
+                .size(44.dp)
+                .clickable { menuExpanded = !menuExpanded }
+        )
+
+        // Menú lateral: va al final para dibujarse encima de todo
+        AnimatedVisibility(
+            visible = menuExpanded,
+            enter = slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }),
+            exit = slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }),
+            modifier = Modifier.align(Alignment.CenterEnd)
+        ) {
+            PetSideMenu(
+                onItemClick = { item ->
+                    when (item) {
+                        "Perfil usuario" -> navController.navigate("userProfile")
+                        "Paseos y actividad" -> navController.navigate("pya")
+                        "Recomendaciones" -> navController.navigate("recom")
+                        "Veterinarias cercanas" -> navController.navigate("nearbyVets")
+                    }
+                },
+                onDismiss = { menuExpanded = false }
             )
         }
     }

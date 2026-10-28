@@ -39,8 +39,17 @@ import org.osmdroid.views.overlay.Marker
 import com.example.pawsy.BuildConfig
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase
 import org.osmdroid.util.MapTileIndex
-
+import android.graphics.Color
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 private val BOGOTA = GeoPoint(4.7110, -74.0721)
+
+private fun Marker.setPinColor(context: Context, color: Int) {
+    val pin = ContextCompat.getDrawable(context, org.osmdroid.library.R.drawable.marker_default)
+        ?.mutate() ?: return
+    DrawableCompat.setTint(pin, color)
+    icon = pin
+}
 
 private val MapTilerSource = object : OnlineTileSourceBase(
     "MapTiler", 0, 20, 256, ".png",
@@ -139,20 +148,22 @@ fun NearbyVetsScreen(navController: NavController) {
                     map.controller.setCenter(center)
                     map.overlays.clear()
 
-                    // Tu ubicación
+                    // Tu ubicación (verde)
                     map.overlays.add(Marker(map).apply {
                         position = center
                         title = myLocationText
                         setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                        setPinColor(map.context, Color.parseColor("#43A047"))
                     })
 
-                    // Veterinarias y tiendas
+// Veterinarias y tiendas (rojo)
                     places.forEach { p ->
                         map.overlays.add(Marker(map).apply {
                             position = GeoPoint(p.lat, p.lon)
                             title = p.name ?: noNameText
                             snippet = if (p.kind == PlaceKind.VET) vetText else storeText
                             setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                            setPinColor(map.context, Color.parseColor("#E53935"))
                         })
                     }
                     map.invalidate()

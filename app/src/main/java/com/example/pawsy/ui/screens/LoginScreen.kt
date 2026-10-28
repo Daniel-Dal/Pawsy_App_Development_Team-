@@ -202,37 +202,9 @@ fun LoginScreen(navController: NavController) {
                     singleLine = true,
                     keyboardType = KeyboardType.Email
                 )
-                Text(
-                    text = stringResource(R.string.contrase_a),
-                    modifier = Modifier
-                        .alpha(textAlpha.value)
-                        .padding(top = 290.dp, end = 150.dp),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                PawsyTextField(
-                    value = contrasena,
-                    onValueChange = { nuevoTexto ->
-                        contrasena = nuevoTexto.filter { !it.isWhitespace() }
-                    },
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = 320.dp)
-                        .fillMaxWidth(0.8f),
-                    keyboardType = KeyboardType.Password,
-                    visualTransformation = PasswordVisualTransformation(),
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            focusManager.clearFocus()
-                        }
-                    )
-                )
 
+                // Imagen de Google: va ANTES de la contraseña para que el campo
+                // quede encima y reciba los toques en su zona.
                 Image(
 
                     painter = painterResource(id = R.drawable.google),
@@ -268,14 +240,14 @@ fun LoginScreen(navController: NavController) {
                                                 if (esNuevoUsuario) {
                                                     // Primera vez: completar los datos del usuario
                                                     navController.navigate("addDataUser") {
-                                                        popUpTo("login") {
+                                                        popUpTo("menu") {
                                                             inclusive = true
                                                         }
                                                     }
                                                 } else {
                                                     // Usuario existente: ir a Mis Mascotas
                                                     navController.navigate("myPets") {
-                                                        popUpTo("login") {
+                                                        popUpTo("menu") {
                                                             inclusive = true
                                                         }
                                                     }
@@ -300,6 +272,38 @@ fun LoginScreen(navController: NavController) {
                             }
                         }
                 )
+
+                Text(
+                    text = stringResource(R.string.contrase_a),
+                    modifier = Modifier
+                        .alpha(textAlpha.value)
+                        .padding(top = 290.dp, end = 150.dp),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                PawsyTextField(
+                    value = contrasena,
+                    onValueChange = { nuevoTexto ->
+                        contrasena = nuevoTexto.filter { !it.isWhitespace() }
+                    },
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = 320.dp)
+                        .fillMaxWidth(0.8f),
+                    keyboardType = KeyboardType.Password,
+                    visualTransformation = PasswordVisualTransformation(),
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            focusManager.clearFocus()
+                        }
+                    )
+                )
+
                 Text(
                     text = stringResource(R.string.olvidaste_tu_contrase_a),
                     modifier = Modifier
@@ -590,31 +594,19 @@ fun LoginScreen(navController: NavController) {
 private suspend fun obtenerTokenGoogle(context: Context): String {
     val credentialManager = CredentialManager.create(context)
 
-    fun crearSolicitud(soloAutorizadas: Boolean): GetCredentialRequest {
-        val googleOption = GetGoogleIdOption.Builder()
-            .setServerClientId(
-                context.getString(R.string.default_web_client_id)
-            )
-            .setFilterByAuthorizedAccounts(soloAutorizadas)
-            .build()
+    val googleOption = GetGoogleIdOption.Builder()
+        .setServerClientId(context.getString(R.string.default_web_client_id))
+        .setFilterByAuthorizedAccounts(false)   // muestra todas las cuentas del dispositivo
+        .build()
 
-        return GetCredentialRequest.Builder()
-            .addCredentialOption(googleOption)
-            .build()
-    }
+    val request = GetCredentialRequest.Builder()
+        .addCredentialOption(googleOption)
+        .build()
 
-    val resultado = try {
-        credentialManager.getCredential(
-            context = context,
-            request = crearSolicitud(true)
-        )
-    } catch (e: NoCredentialException) {
-        // Si no hay cuentas autorizadas, permitir elegir otra.
-        credentialManager.getCredential(
-            context = context,
-            request = crearSolicitud(false)
-        )
-    }
+    val resultado = credentialManager.getCredential(
+        context = context,
+        request = request
+    )
 
     val credential = resultado.credential
 
@@ -627,9 +619,7 @@ private suspend fun obtenerTokenGoogle(context: Context): String {
             .idToken
     }
 
-    throw IllegalStateException(
-        "No se recibió una credencial válida de Google."
-    )
+    throw IllegalStateException("No se recibió una credencial válida de Google.")
 }
 
 @Preview(showBackground = true, showSystemUi = true)

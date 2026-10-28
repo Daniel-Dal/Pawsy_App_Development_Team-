@@ -53,6 +53,28 @@
     <string name="lugar_sin_nombre">Sin nombre</string>
     <string name="error_buscando_lugares">Error buscando lugares</string>
 
+    //Info Usuario para pantalla
+    <string name="usuario_nombre">Nombre</string>
+    <string name="usuario_correo">Correo</string>
+    <string name="usuario_fecha_nacimiento">Fecha de nacimiento</string>
+    <string name="usuario_mis_mascotas">Mis mascotas</string>
+    <string name="usuario_sin_mascotas">Aún no tienes mascotas registradas</string>
+    <string name="usuario_cambiar_foto">Cambiar foto</string>
+    <string name="usuario_error_cargar">No se pudo cargar tu perfil</string>
+    <string name="usuario_error_foto">No se pudo actualizar la foto</string>
+    <string name="usuario_foto_actualizada">Foto actualizada</string>
+
+    //Info para modificar perfil mascota
+    <string name="mascota_cambiar_foto">Cambiar foto</string>
+    <string name="mascota_eliminar_foto">Eliminar foto</string>
+    <string name="mascota_foto_actualizada">Foto actualizada</string>
+    <string name="mascota_foto_eliminada">Foto eliminada</string>
+    <string name="mascota_error_foto">No se pudo actualizar la foto</string>
+    <string name="mascota_eliminar_titulo">¿Eliminar foto?</string>
+    <string name="mascota_eliminar_mensaje">Se quitará la foto de perfil de tu mascota.</string>
+    <string name="mascota_eliminar_confirmar">Eliminar</string>
+    <string name="mascota_cancelar">Cancelar</string>
+
     <string-array name="recomendaciones_ejemplo">
         <item>Ejercicio diario: necesita al menos una hora de actividad al día, como caminatas largas o juegos de buscar.</item>
         <item>Alimentación: dale croquetas de buena calidad y ajusta las porciones según su edad y peso para evitar el sobrepeso.</item>

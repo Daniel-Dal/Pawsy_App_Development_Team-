@@ -32,7 +32,7 @@ object NearbyPlacesRepository {
 
     private const val USER_AGENT = "PawsyApp/1.0 (contactopawsyapp@gmail.com)"
 
-    suspend fun nearby(lat: Double, lon: Double, radiusMeters: Int = 5000): Result<List<NearbyPlace>> =
+    suspend fun nearby(lat: Double, lon: Double, radiusMeters: Int = 3000): Result<List<NearbyPlace>> =
         withContext(Dispatchers.IO) {
             runCatching {
                 val query = """
@@ -60,6 +60,7 @@ object NearbyPlacesRepository {
                         }
                         return@runCatching parse(text)
                     } catch (e: Exception) {
+                        android.util.Log.e("Overpass", "Falló $endpoint: ${e::class.simpleName}: ${e.message}")
                         lastError = e
                     }
                 }

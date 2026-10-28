@@ -70,7 +70,7 @@ fun MyProfileText(navController: NavController) {
 
             PawsyButton(
 
-                onClick = { /* Nothing yet */ }
+                onClick = { navController.navigate("userData") }
             )
 
             Text( text = stringResource(id = R.string.boton_idioma),

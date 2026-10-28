@@ -47,6 +47,9 @@ fun AppNavigation() {
         composable("userProfile") {
             MyProfileText(navController)
         }
+        composable("userData") {
+            UserDataScreen(navController)
+        }
         composable("pya") {
             RegistroPaseoActividad(navController)
         }
