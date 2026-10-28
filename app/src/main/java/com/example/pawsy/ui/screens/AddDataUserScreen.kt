@@ -42,6 +42,10 @@ import java.util.TimeZone
 import androidx.compose.runtime.rememberCoroutineScope
 import com.example.pawsy.subirImagen
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 
 @Composable
 fun DataUser(navController: NavController) {
@@ -55,6 +59,7 @@ fun DataUser(navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.pawsyColors.recuadroInicioSesion)
+                .verticalScroll(rememberScrollState())
                 .padding(6.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -111,6 +116,9 @@ fun DataUser(navController: NavController) {
 
             ContinueBotton(
                 onClick = {
+
+                    if (guardando) return@ContinueBotton
+
                     if (fechaNacimiento.isBlank()) {
                         Toast.makeText(
                             navController.context,
@@ -220,7 +228,7 @@ fun DataUser(navController: NavController) {
                 Text(text = stringResource(R.string.boton_continuar))
             }
 
-
+            Spacer(modifier = Modifier.height(24.dp))
 
         }
     }
