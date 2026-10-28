@@ -22,54 +22,69 @@ import com.example.pawsy.ui.theme.PawsyTheme
 import androidx.compose.ui.Alignment
 import com.example.pawsy.ui.components.Calendario
 import com.example.pawsy.ui.components.ContinueBotton
-import com.example.pawsy.ui.components.PawsyTextField
 import com.example.pawsy.ui.theme.pawsyColors
 import android.net.Uri
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import com.example.pawsy.ui.components.ImagenPerfil
-
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.Timestamp
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
+import androidx.compose.runtime.rememberCoroutineScope
+import com.example.pawsy.subirImagen
+import kotlinx.coroutines.launch
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 
 @Composable
 fun DataUser(navController: NavController) {
     PawsyTheme {
-        var nickname by remember { mutableStateOf("") }
+
         var fechaNacimiento by remember { mutableStateOf("") }
         var imagenPerfil by remember { mutableStateOf<Uri?>(null) }
-
+        var guardando by remember { mutableStateOf(false) }
+        val scope = rememberCoroutineScope()
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.pawsyColors.recuadroInicioSesion)
-                .padding(16.dp),
+                .verticalScroll(rememberScrollState())
+                .padding(6.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
                 text = "Agregar datos nuevo usuario",
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.pawsyColors.blanco,
-                modifier = Modifier.padding(top = 40.dp)
+                modifier = Modifier.padding(top = 20.dp),
+                textAlign = TextAlign.Center
             )
 
-            Text(
-                text = "Nickname",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.pawsyColors.blanco
-            )
+            Image(
+                painter = painterResource(R.drawable.persona),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(230.dp)
+                    .align(Alignment.CenterHorizontally)
 
-            PawsyTextField(value = nickname, onValueChange = { nickname = it },
-                modifier = Modifier.
-                    width(350.dp),
-                containerColor = MaterialTheme.pawsyColors.fondoAgregarMascota,
-                textColor =MaterialTheme.pawsyColors.textEditTextAgregarMascota)
+            )
 
             Text(
                 text = "Fecha de nacimiento",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.pawsyColors.blanco,
-                modifier = Modifier.padding(top = 50.dp)
+                modifier = Modifier.padding(top = 20.dp)
             )
             Calendario(
                 fecha = fechaNacimiento,
@@ -85,7 +100,7 @@ fun DataUser(navController: NavController) {
                 color = MaterialTheme.pawsyColors.blanco,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 40.dp),
+                    .padding(top = 20.dp),
                     textAlign = TextAlign.Center
             )
             ImagenPerfil(
@@ -93,13 +108,115 @@ fun DataUser(navController: NavController) {
                 onImagenSeleccionada = { uri ->
                     imagenPerfil = uri
                 },
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                colorBorde = MaterialTheme.pawsyColors.blanco,
+                tamanio = 220.dp
             )
+
 
             ContinueBotton(
                 onClick = {
-                    // Acción del botón
-                    navController.navigate("addPet")
+
+                    if (guardando) return@ContinueBotton
+
+                    if (fechaNacimiento.isBlank()) {
+                        Toast.makeText(
+                            navController.context,
+                            "Selecciona tu fecha de nacimiento.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        return@ContinueBotton
+                    }
+
+                    val formatoFecha = SimpleDateFormat(
+                        "dd/MM/yyyy",
+                        Locale.getDefault()
+                    ).apply {
+                        isLenient = false
+                        timeZone = TimeZone.getTimeZone("America/Bogota")
+                    }
+
+                    val fechaDate: Date? = try {
+                        formatoFecha.parse(fechaNacimiento)
+                    } catch (e: Exception) {
+                        null
+                    }
+
+                    if (fechaDate == null) {
+                        Toast.makeText(
+                            navController.context,
+                            "La fecha de nacimiento no es válida.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        return@ContinueBotton
+                    }
+
+                    val usuario = FirebaseAuth.getInstance().currentUser
+
+                    if (usuario == null) {
+                        Toast.makeText(
+                            navController.context,
+                            "Debes crear una cuenta o iniciar sesión.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        return@ContinueBotton
+                    }
+
+                    guardando = true
+
+                    scope.launch {
+                        try {
+                            val urlImagen = if (imagenPerfil != null) {
+                                subirImagen(
+                                    context = navController.context,
+                                    imagenUri = imagenPerfil!!
+                                )
+                            } else {
+                                ""
+                            }
+
+                            val datosUsuario = hashMapOf(
+                                "nombre" to (usuario.displayName ?: ""),
+                                "correo" to (usuario.email ?: ""),
+                                "fecha_nacimiento" to Timestamp(fechaDate),
+                                "fecha_registro" to Timestamp.now(),
+                                "urlimagen" to urlImagen
+                            )
+
+                            FirebaseFirestore.getInstance()
+                                .collection("usuarios")
+                                .document(usuario.uid)
+                                .set(datosUsuario)
+                                .addOnSuccessListener {
+                                    guardando = false
+
+                                    Toast.makeText(
+                                        navController.context,
+                                        "Datos guardados correctamente.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+
+                                    navController.navigate("addPet")
+                                }
+                                .addOnFailureListener { error ->
+                                    guardando = false
+
+                                    Toast.makeText(
+                                        navController.context,
+                                        "No se pudieron guardar los datos: ${error.message}",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                        } catch (e: Exception) {
+                            guardando = false
+
+                            Toast.makeText(
+                                navController.context,
+                                "No se pudo subir la imagen: ${e.message}",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
@@ -108,11 +225,10 @@ fun DataUser(navController: NavController) {
                 borderColor = MaterialTheme.pawsyColors.blanco,
                 borderWidth = 1.dp
             ) {
-                Text(
-                    text = stringResource(R.string.boton_continuar)
-                )
+                Text(text = stringResource(R.string.boton_continuar))
             }
 
+            Spacer(modifier = Modifier.height(24.dp))
 
         }
     }

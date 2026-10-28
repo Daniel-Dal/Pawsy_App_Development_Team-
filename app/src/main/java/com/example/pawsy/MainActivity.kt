@@ -14,12 +14,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.pawsy.ui.theme.PawsyTheme
 import com.example.pawsy.ui.screens.SplashScreen
 import com.example.pawsy.ui.screens.AppNavigation
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
+
         setContent {
             PawsyTheme {
                 AppNavigation()

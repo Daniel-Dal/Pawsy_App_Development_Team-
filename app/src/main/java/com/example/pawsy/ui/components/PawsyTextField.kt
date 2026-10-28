@@ -12,6 +12,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.pawsy.ui.theme.pawsyColors
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.foundation.text.KeyboardActions
 
 @Composable
 fun PawsyTextField(
@@ -20,15 +22,21 @@ fun PawsyTextField(
     modifier: Modifier = Modifier,
     keyboardType: KeyboardType = KeyboardType.Text,
     containerColor: Color = MaterialTheme.pawsyColors.editTextAgregarMascota,
-    textColor: Color = MaterialTheme.pawsyColors.blanco
+    textColor: Color = MaterialTheme.pawsyColors.blanco,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    singleLine: Boolean = false
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier.fillMaxWidth(),
+        singleLine = singleLine,
         shape = RoundedCornerShape(24.dp),
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-
+        keyboardActions = keyboardActions,
+        visualTransformation = visualTransformation,
         colors = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = containerColor,
             unfocusedContainerColor = containerColor,

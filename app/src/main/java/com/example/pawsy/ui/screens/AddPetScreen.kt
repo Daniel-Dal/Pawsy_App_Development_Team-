@@ -50,11 +50,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.compose.rememberNavController
 import com.example.pawsy.ui.components.BasicCircleBotton
 import com.example.pawsy.ui.theme.pawsyColors
-
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
-
-
-
+import android.net.Uri
+import com.example.pawsy.ui.components.ImagenPerfil
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.rememberCoroutineScope
+import com.example.pawsy.guardarMascota
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,19 +78,105 @@ fun MyText(navController: NavController) {
         var unidadPeso by remember { mutableStateOf("Kg") }
         var unidadExpandible by remember { mutableStateOf(false) }
 
-        val especieOpciones = stringArrayResource(id = R.array.opciones_especie)
+
         val unidades = stringArrayResource(id = R.array.opciones_unidad_peso)
+        val especieOpciones = remember { mutableStateListOf<String>() }
+        var cargandoEspecies by remember { mutableStateOf(true) }
+        var errorEspecies by remember { mutableStateOf(false) }
+
+        var razaExpandible by remember { mutableStateOf(false) }
+        val razaOpciones = remember { mutableStateListOf<String>() }
+        var cargandoRazas by remember { mutableStateOf(false) }
+
+        val scope = rememberCoroutineScope()
+        var guardando by remember { mutableStateOf(false) }
+
+        LaunchedEffect(especie) {
+            raza = ""
+            razaOpciones.clear()
+
+            if (especie.isNotBlank()) {
+                cargandoRazas = true
+
+                val db = FirebaseFirestore.getInstance()
+
+                db.collection("especies")
+                    .whereEqualTo("nombre", especie)
+                    .get()
+                    .addOnSuccessListener { especies ->
+                        val idEspecie = especies.documents.firstOrNull()?.id
+
+                        if (idEspecie != null) {
+                            db.collection("razas")
+                                .whereEqualTo("idespecie", idEspecie)
+                                .get()
+                                .addOnSuccessListener { razas ->
+                                    razaOpciones.clear()
+                                    razaOpciones.addAll(
+                                        razas.documents.mapNotNull { documento ->
+                                            documento.getString("nombre")
+                                        }.sorted()
+                                    )
+
+                                    cargandoRazas = false
+
+                                    Log.d(
+                                        "PAWSY_RAZAS",
+                                        "ID especie: $idEspecie; razas encontradas: ${razas.size()}"
+                                    )
+                                }
+                                .addOnFailureListener { error ->
+                                    Log.e("PAWSY_RAZAS", "Error consultando razas", error)
+                                    cargandoRazas = false
+                                }
+                        } else {
+                            Log.e("PAWSY_RAZAS", "No se encontró la especie: $especie")
+                            cargandoRazas = false
+                        }
+                    }
+                    .addOnFailureListener { error ->
+                        Log.e("PAWSY_RAZAS", "Error consultando especies", error)
+                        cargandoRazas = false
+                    }
+            }
+        }
+
+
+        LaunchedEffect(Unit) {
+            FirebaseFirestore.getInstance()
+                .collection("especies")
+                .get()
+                .addOnSuccessListener { resultado ->
+                    especieOpciones.clear()
+
+                    especieOpciones.addAll(
+                        resultado.documents.mapNotNull { documento ->
+                            documento.getString("nombre")
+                        }.sorted()
+                    )
+
+                    cargandoEspecies = false
+                    errorEspecies = false
+                }
+                .addOnFailureListener {
+                    cargandoEspecies = false
+                    errorEspecies = true
+                }
+        }
 
     Box(modifier = Modifier
         .fillMaxSize()
         ) {
+        var imagenPerfil by remember { mutableStateOf<Uri?>(null) }
 
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.pawsyColors.fondoAgregarMascota)
-            .padding(16.dp),
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.pawsyColors.fondoAgregarMascota)
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
+        )  {
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 48.dp),
@@ -115,15 +210,33 @@ fun MyText(navController: NavController) {
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.pawsyColors.blanco
             )
+
             ExposedDropdownMenuBox(
                 expanded = especieExpandible,
-                onExpandedChange = { especieExpandible = !especieExpandible }
+                onExpandedChange = {
+                    especieExpandible = !especieExpandible
+                }
             ) {
                 OutlinedTextField(
                     value = especie,
                     onValueChange = {},
                     readOnly = true,
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = especieExpandible) },
+                    placeholder = {
+                        Text(
+                            text = when {
+                                cargandoEspecies -> "..."
+                                errorEspecies -> "Error al cargar especies"
+                                especieOpciones.isEmpty() -> "No hay especies disponibles"
+                                else -> "Selecciona una especie"
+                            },
+                            color = MaterialTheme.pawsyColors.textEditTextAgregarMascota
+                        )
+                    },
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(
+                            expanded = especieExpandible
+                        )
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .menuAnchor(
@@ -132,30 +245,65 @@ fun MyText(navController: NavController) {
                         ),
                     shape = RoundedCornerShape(24.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = MaterialTheme.pawsyColors.editTextAgregarMascota,
-                        unfocusedContainerColor = MaterialTheme.pawsyColors.editTextAgregarMascota,
+                        focusedContainerColor =
+                            MaterialTheme.pawsyColors.editTextAgregarMascota,
+                        unfocusedContainerColor =
+                            MaterialTheme.pawsyColors.editTextAgregarMascota,
                         focusedBorderColor = Color.Transparent,
                         unfocusedBorderColor = Color.Transparent,
-                        focusedTextColor = MaterialTheme.pawsyColors.textEditTextAgregarMascota,
-                        unfocusedTextColor = MaterialTheme.pawsyColors.textEditTextAgregarMascota
+                        focusedTextColor =
+                            MaterialTheme.pawsyColors.textEditTextAgregarMascota,
+                        unfocusedTextColor =
+                            MaterialTheme.pawsyColors.textEditTextAgregarMascota
                     )
                 )
 
                 ExposedDropdownMenu(
                     expanded = especieExpandible,
-                    onDismissRequest = { especieExpandible = false }
+                    onDismissRequest = {
+                        especieExpandible = false
+                    }
                 ) {
-                    especieOpciones.forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(option) },
-                            onClick = {
-                                especie = option
-                                especieExpandible = false
+                    when {
+                        cargandoEspecies -> {
+                            DropdownMenuItem(
+                                text = { Text("Cargando especies...") },
+                                onClick = {},
+                                enabled = false
+                            )
+                        }
+
+                        errorEspecies -> {
+                            DropdownMenuItem(
+                                text = { Text("No se pudieron cargar las especies") },
+                                onClick = {},
+                                enabled = false
+                            )
+                        }
+
+                        especieOpciones.isEmpty() -> {
+                            DropdownMenuItem(
+                                text = { Text("No hay especies registradas") },
+                                onClick = {},
+                                enabled = false
+                            )
+                        }
+
+                        else -> {
+                            especieOpciones.forEach { option ->
+                                DropdownMenuItem(
+                                    text = { Text(option) },
+                                    onClick = {
+                                        especie = option
+                                        especieExpandible = false
+                                    }
+                                )
                             }
-                        )
+                        }
                     }
                 }
             }
+
 
             Text(
                 text = stringResource(id = R.string.subtitulo_edadMascota),
@@ -173,7 +321,75 @@ fun MyText(navController: NavController) {
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.pawsyColors.blanco
             )
-            PawsyTextField(value = raza, onValueChange = { raza = it })
+            ExposedDropdownMenuBox(
+                expanded = razaExpandible,
+                onExpandedChange = {
+                    if (especie.isNotBlank() && !cargandoRazas) {
+                        razaExpandible = !razaExpandible
+                    }
+                }
+            ) {
+                OutlinedTextField(
+                    value = raza,
+                    onValueChange = {},
+                    readOnly = true,
+                    enabled = especie.isNotBlank() && !cargandoRazas,
+                    placeholder = {
+                        Text(
+                            when {
+                                especie.isBlank() -> "Primero selecciona una especie"
+                                cargandoRazas -> "Cargando razas..."
+                                razaOpciones.isEmpty() -> "No hay razas disponibles"
+                                else -> "Selecciona una raza"
+                            }
+                        )
+                    },
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(
+                            expanded = razaExpandible
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .menuAnchor(
+                            ExposedDropdownMenuAnchorType.PrimaryNotEditable,
+                            enabled = especie.isNotBlank() && !cargandoRazas
+                        ),
+                    shape = RoundedCornerShape(24.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor =
+                            MaterialTheme.pawsyColors.editTextAgregarMascota,
+                        unfocusedContainerColor =
+                            MaterialTheme.pawsyColors.editTextAgregarMascota,
+                        disabledContainerColor =
+                            MaterialTheme.pawsyColors.editTextAgregarMascota,
+                        focusedBorderColor = Color.Transparent,
+                        unfocusedBorderColor = Color.Transparent,
+                        disabledBorderColor = Color.Transparent,
+                        focusedTextColor =
+                            MaterialTheme.pawsyColors.textEditTextAgregarMascota,
+                        unfocusedTextColor =
+                            MaterialTheme.pawsyColors.textEditTextAgregarMascota,
+                        disabledTextColor =
+                            MaterialTheme.pawsyColors.textEditTextAgregarMascota
+                    )
+                )
+
+                ExposedDropdownMenu(
+                    expanded = razaExpandible,
+                    onDismissRequest = { razaExpandible = false }
+                ) {
+                    razaOpciones.forEach { opcion ->
+                        DropdownMenuItem(
+                            text = { Text(opcion) },
+                            onClick = {
+                                raza = opcion
+                                razaExpandible = false
+                            }
+                        )
+                    }
+                }
+            }
 
             Text(
                 text = stringResource(id = R.string.subtitulo_pesoMascota),
@@ -218,12 +434,69 @@ fun MyText(navController: NavController) {
                 }
             }
 
+            Text(
+                text = "Imagen perfil",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.pawsyColors.blanco,
+                textAlign = TextAlign.Center
+            )
+
+            ImagenPerfil(
+                imagenSeleccionada = imagenPerfil,
+                onImagenSeleccionada = { uri ->
+                    imagenPerfil = uri
+                },
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                colorBorde = MaterialTheme.pawsyColors.letraInicioApp,
+                colorTexto = Color.White,
+                tamanio = 220.dp
+            )
+
 
             OutlinedButton(
                 onClick = {
-                /* nothing yet */
-                    navController.navigate("myPets")
+                    if (nombre.isBlank()) {
+                        Toast.makeText(
+                            navController.context,
+                            "Escribe el nombre de tu mascota.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        return@OutlinedButton
+                    }
+
+                    guardando = true
+
+                    scope.launch {
+                        try {
+                            guardarMascota(
+                                context = navController.context,
+                                nombre = nombre,
+                                especie = especie,
+                                raza = raza,
+                                edad = edad,
+                                peso = peso,
+                                imagenUri = imagenPerfil
+                            )
+
+                            Toast.makeText(
+                                navController.context,
+                                "Mascota guardada correctamente.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                            navController.navigate("myPets")
+                        } catch (e: Exception) {
+                            Toast.makeText(
+                                navController.context,
+                                "No se pudo guardar la mascota: ${e.message}",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } finally {
+                            guardando = false
+                        }
+                    }
                 },
+                enabled = !guardando,
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
                     .align(Alignment.CenterHorizontally)
@@ -240,21 +513,22 @@ fun MyText(navController: NavController) {
                 Text(text = stringResource(id = R.string.boton_continuar))
             }
         }
-        BasicCircleBotton (
-            onClick = { },
+        BasicCircleBotton(
+            onClick = { navController.navigate("myPets") },
             size = 50.dp,
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(
-                    top = 20.dp,
-                    start = 20.dp
+                    top = 645.dp,
+                    start = 300.dp
                 ),
             backgroundColor = MaterialTheme.pawsyColors.fondoSeleccionMascotaApp
         ) {
             Icon(
                 painter = painterResource(R.drawable.return_arrow),
                 contentDescription = "Mascota",
-                modifier = Modifier.size(40.dp)
+                modifier = Modifier
+                    .size(40.dp)
                     .offset(x = (-5).dp),
                 tint = MaterialTheme.pawsyColors.fondoAgregarMascota
             )
