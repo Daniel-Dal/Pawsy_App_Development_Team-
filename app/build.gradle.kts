@@ -7,7 +7,6 @@ plugins {
     id("com.google.gms.google-services")
 }
 
-
 val propiedadesLocales = Properties()
 val archivoLocal = rootProject.file("local.properties")
 
@@ -16,6 +15,13 @@ if (archivoLocal.exists()) {
         propiedadesLocales.load(it)
     }
 }
+
+val supabaseUrl: String = propiedadesLocales.getProperty("SUPABASE_URL", "")
+val supabaseKey: String = propiedadesLocales.getProperty(
+    "SUPABASE_KEY",
+    propiedadesLocales.getProperty("SUPABASE_ANON_KEY", "")
+)
+
 android {
     namespace = "com.example.pawsy"
     compileSdk = 37
@@ -26,18 +32,14 @@ android {
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"
-        buildConfigField(
-            "String",
-            "SUPABASE_URL",
-            "\"${propiedadesLocales.getProperty("SUPABASE_URL", "")}\""
-        )
 
-        buildConfigField(
-            "String",
-            "SUPABASE_KEY",
-            "\"${propiedadesLocales.getProperty("SUPABASE_KEY", "")}\""
-        )
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
+        buildConfigField("String", "SUPABASE_KEY", "\"$supabaseKey\"")
+        buildConfigField("String", "SUPABASE_ANON_KEY", "\"$supabaseKey\"")
     }
+
     buildFeatures {
         compose = true
         buildConfig = true
@@ -48,24 +50,22 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
         isCoreLibraryDesugaringEnabled = true
     }
-
-
 }
-
+@Suppress("DuplicatePlatformClasses")
 dependencies {
-    implementation("androidx.core:core-splashscreen:1.0.1")
-    implementation("io.coil-kt:coil-compose:2.7.0")
-    implementation("androidx.navigation:navigation-compose:2.9.4")
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.coil.compose)
+    implementation(libs.androidx.navigation.compose)
 
     implementation(platform(libs.androidx.compose.bom))
-    implementation(platform("com.google.firebase:firebase-bom:34.19.0"))
+    implementation(platform(libs.firebase.bom))
 
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-firestore")
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
 
-    implementation("androidx.credentials:credentials:1.3.0")
-    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
-    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.foundation)
@@ -79,6 +79,16 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.material3)
 
+    // Supabase
+    implementation(platform(libs.supabase.bom))
+    implementation(libs.supabase.storage)
+    implementation(libs.ktor.client.android)
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
+
+    // Nuevas (rama reportesMedicosyMapa)
+    implementation(libs.okhttp)
+    implementation(libs.kotlinx.coroutines.play.services)
+
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
@@ -87,12 +97,4 @@ dependencies {
 
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-
-    implementation(platform("io.github.jan-tennert.supabase:bom:3.5.0"))
-    implementation("io.github.jan-tennert.supabase:storage-kt")
-    implementation("io.ktor:ktor-client-android:3.0.3")
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
-
-
-
 }

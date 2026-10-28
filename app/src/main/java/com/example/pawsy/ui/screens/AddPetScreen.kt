@@ -57,9 +57,13 @@ import androidx.navigation.NavController
 import android.net.Uri
 import com.example.pawsy.ui.components.ImagenPerfil
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.rememberCoroutineScope
+import com.example.pawsy.guardarMascota
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -84,6 +88,8 @@ fun MyText(navController: NavController) {
         val razaOpciones = remember { mutableStateListOf<String>() }
         var cargandoRazas by remember { mutableStateOf(false) }
 
+        val scope = rememberCoroutineScope()
+        var guardando by remember { mutableStateOf(false) }
 
         LaunchedEffect(especie) {
             raza = ""
@@ -443,15 +449,54 @@ fun MyText(navController: NavController) {
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 colorBorde = MaterialTheme.pawsyColors.letraInicioApp,
                 colorTexto = Color.White,
-                tamanio = 120.dp
+                tamanio = 220.dp
             )
 
 
             OutlinedButton(
                 onClick = {
-                /* nothing yet */
-                    navController.navigate("myPets")
+                    if (nombre.isBlank()) {
+                        Toast.makeText(
+                            navController.context,
+                            "Escribe el nombre de tu mascota.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        return@OutlinedButton
+                    }
+
+                    guardando = true
+
+                    scope.launch {
+                        try {
+                            guardarMascota(
+                                context = navController.context,
+                                nombre = nombre,
+                                especie = especie,
+                                raza = raza,
+                                edad = edad,
+                                peso = peso,
+                                imagenUri = imagenPerfil
+                            )
+
+                            Toast.makeText(
+                                navController.context,
+                                "Mascota guardada correctamente.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                            navController.navigate("myPets")
+                        } catch (e: Exception) {
+                            Toast.makeText(
+                                navController.context,
+                                "No se pudo guardar la mascota: ${e.message}",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } finally {
+                            guardando = false
+                        }
+                    }
                 },
+                enabled = !guardando,
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
                     .align(Alignment.CenterHorizontally)

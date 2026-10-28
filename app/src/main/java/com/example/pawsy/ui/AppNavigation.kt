@@ -1,9 +1,11 @@
 package com.example.pawsy.ui.screens
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 
 @Composable
 fun AppNavigation() {
@@ -32,8 +34,15 @@ fun AppNavigation() {
         composable("myPets") {
             MyPetsScreen(navController)
         }
-        composable("petProfile") {
-            ProfileScreen(navController)
+        composable(
+            route = "petProfile/{mascotaId}",
+            arguments = listOf(navArgument("mascotaId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val mascotaId = backStackEntry.arguments?.getString("mascotaId")
+            ProfileScreen(
+                navController = navController,
+                mascotaId = mascotaId
+            )
         }
         composable("userProfile") {
             MyProfileText(navController)
@@ -48,6 +57,15 @@ fun AppNavigation() {
             VerifyEmailScreen(navController = navController)
         }
 
+        composable(
+            route = "historias/{mascotaId}",
+            arguments = listOf(navArgument("mascotaId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            MedicalRecordsScreen(
+                navController = navController,
+                mascotaId = backStackEntry.arguments?.getString("mascotaId")
+            )
+        }
 
     }
 }

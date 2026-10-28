@@ -105,7 +105,7 @@ fun DataUser(navController: NavController) {
                 },
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 colorBorde = MaterialTheme.pawsyColors.blanco,
-                tamanio = 120.dp
+                tamanio = 220.dp
             )
 
 

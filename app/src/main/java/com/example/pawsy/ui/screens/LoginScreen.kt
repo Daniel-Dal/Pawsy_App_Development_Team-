@@ -76,6 +76,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -357,35 +359,54 @@ fun LoginScreen(navController: NavController) {
                                 ).show()
                             }
 
-                            // Consultar si el correo existe en Firestore
+                            // Iniciar sesión con Firebase Auth y luego leer el documento por UID
                             else -> {
-                                db.collection("usuarios")
-                                    .whereEqualTo("correo", correoIngresado)
-                                    .get()
+                                FirebaseAuth.getInstance()
+                                    .signInWithEmailAndPassword(correoIngresado, contrasenaIngresada)
                                     .addOnSuccessListener { resultado ->
-                                        if (resultado.isEmpty) {
+                                        val uid = resultado.user?.uid
+
+                                        if (uid == null) {
                                             Toast.makeText(
                                                 context,
-                                                "No encontramos una cuenta con ese correo",
+                                                "No pudimos iniciar sesión. Inténtalo de nuevo.",
                                                 Toast.LENGTH_LONG
                                             ).show()
-                                        } else {
-                                            Toast.makeText(
-                                                context,
-                                                "Correo encontrado",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-
-                                            // Aquí continúa la autenticación.
-                                            // Todavía falta verificar la contraseña.
+                                            return@addOnSuccessListener
                                         }
+
+                                        FirebaseFirestore.getInstance()
+                                            .collection("usuarios")
+                                            .document(uid)
+                                            .get()
+                                            .addOnSuccessListener { doc ->
+                                                if (doc.exists()) {
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Bienvenido",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                    navController.navigate("myPets")
+                                                } else {
+                                                    navController.navigate("addDataUser")
+                                                }
+                                            }
+                                            .addOnFailureListener {
+                                                Toast.makeText(
+                                                    context,
+                                                    "Iniciaste sesión, pero no pudimos cargar tus datos.",
+                                                    Toast.LENGTH_LONG
+                                                ).show()
+                                            }
                                     }
-                                    .addOnFailureListener {
-                                        Toast.makeText(
-                                            context,
-                                            "No pudimos comprobar el correo. Inténtalo de nuevo.",
-                                            Toast.LENGTH_LONG
-                                        ).show()
+                                    .addOnFailureListener { e ->
+                                        val mensaje = when (e) {
+                                            is FirebaseAuthInvalidUserException,
+                                            is FirebaseAuthInvalidCredentialsException ->
+                                                "Correo o contraseña incorrectos"
+                                            else -> "No pudimos iniciar sesión. Revisa tu conexión."
+                                        }
+                                        Toast.makeText(context, mensaje, Toast.LENGTH_LONG).show()
                                     }
                             }
                         }
@@ -490,15 +511,11 @@ fun LoginScreen(navController: NavController) {
                 ,
                 confirmButton = {
                     TextButton(
-                        enabled = correoRecuperacion.isNotBlank() &&
-                                !enviandoRecuperacion,
+                        enabled = correoRecuperacion.isNotBlank() && !enviandoRecuperacion,
                         onClick = {
                             val correo = correoRecuperacion.trim()
-                            val auth = FirebaseAuth.getInstance()
-                            val db = FirebaseFirestore.getInstance()
-                            if (!android.util.Patterns.EMAIL_ADDRESS
-                                    .matcher(correo).matches()
-                            ) {
+
+                            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
                                 Toast.makeText(
                                     context,
                                     "Ingresa un correo válido",
@@ -507,57 +524,32 @@ fun LoginScreen(navController: NavController) {
                             } else {
                                 enviandoRecuperacion = true
 
-                                // Primero comprobar el correo en Firestore
-                                db.collection("usuarios")
-                                    .whereEqualTo("correo", correo)
-                                    .get()
-                                    .addOnSuccessListener { resultado ->
-
-                                        if (resultado.isEmpty) {
-                                            enviandoRecuperacion = false
-
-                                            Toast.makeText(
-                                                context,
-                                                "No encontramos ese correo en usuarios",
-                                                Toast.LENGTH_LONG
-                                            ).show()
-                                        } else {
-                                            // Si existe en Firestore,
-                                            // solicitar el correo de recuperación
-                                            auth.sendPasswordResetEmail(correo)
-                                                .addOnCompleteListener { task ->
-                                                    enviandoRecuperacion = false
-
-                                                    if (task.isSuccessful) {
-                                                        Toast.makeText(
-                                                            context,
-                                                            "Si la cuenta está habilitada " +
-                                                                    "en Firebase Authentication, " +
-                                                                    "recibirás el enlace.",
-                                                            Toast.LENGTH_LONG
-                                                        ).show()
-
-                                                        mostrarDialogoRecuperacion = false
-                                                        correoRecuperacion = ""
-                                                    } else {
-                                                        Toast.makeText(
-                                                            context,
-                                                            "No se pudo enviar el correo. " +
-                                                                    "Verifica la cuenta e inténtalo de nuevo.",
-                                                            Toast.LENGTH_LONG
-                                                        ).show()
-                                                    }
-                                                }
-                                        }
-                                    }
-                                    .addOnFailureListener {
+                                FirebaseAuth.getInstance()
+                                    .sendPasswordResetEmail(correo)
+                                    .addOnCompleteListener { task ->
                                         enviandoRecuperacion = false
 
-                                        Toast.makeText(
-                                            context,
-                                            "No pudimos consultar el correo en la base de datos",
-                                            Toast.LENGTH_LONG
-                                        ).show()
+                                        val noExiste = task.exception is FirebaseAuthInvalidUserException
+
+                                        if (task.isSuccessful || noExiste) {
+                                            // Mismo mensaje exista o no el correo,
+                                            // para no revelar qué correos están registrados
+                                            Toast.makeText(
+                                                context,
+                                                "Si el correo está registrado, recibirás un enlace " +
+                                                        "para restablecer tu contraseña.",
+                                                Toast.LENGTH_LONG
+                                            ).show()
+
+                                            mostrarDialogoRecuperacion = false
+                                            correoRecuperacion = ""
+                                        } else {
+                                            Toast.makeText(
+                                                context,
+                                                "No se pudo enviar el correo. Revisa tu conexión e inténtalo de nuevo.",
+                                                Toast.LENGTH_LONG
+                                            ).show()
+                                        }
                                     }
                             }
                         }
