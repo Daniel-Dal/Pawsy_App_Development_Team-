@@ -78,7 +78,7 @@ fun ProfileScreen(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Campos de solo lectura: muestran los datos recibidos en petProfile
+
                 PetProfileField(label = "Nombre", value = petProfile.nombre)
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -99,7 +99,7 @@ fun ProfileScreen(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                // Botón flotante inferior derecho (huella) — ej. para ir a editar
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
@@ -108,7 +108,7 @@ fun ProfileScreen(
                 }
             }
 
-            // Menú lateral desplegable. Sin funcionalidad todavía: solo muestra las opciones.
+
             AnimatedVisibility(
                 visible = menuExpanded,
                 enter = slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }),
@@ -121,6 +121,8 @@ fun ProfileScreen(
                             "Perfil usuario" -> navController.navigate("userProfile")
                             "Paseos y actividad" -> navController.navigate("pya")
                             "Recomendaciones" -> navController.navigate("recom")
+                            "Reconocimiento visual" -> navController.navigate("food")
+                            "Eventos" -> navController.navigate("eventos")
                         }
                     },
                     onDismiss = { menuExpanded = false }
@@ -182,13 +184,13 @@ private fun PawIconBadge(
 @Composable
 private fun PawSubmitButton(
     onClick: () -> Unit,
-    pawImage: Painter = painterResource(R.drawable.ic_paw_outline)
+    pawImage: Painter = painterResource(R.drawable.ic_paw_menu)
 ) {
     Image(
         painter = pawImage,
         contentDescription = "Guardar perfil",
         modifier = Modifier
-            .size(44.dp)
+            .size(70.dp)
             .clickable(onClick = onClick)
     )
 }

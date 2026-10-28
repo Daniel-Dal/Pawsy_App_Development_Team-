@@ -57,8 +57,8 @@ fun MyPetsScreen(navController: NavController) {
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(
-                    top = 30.dp,
-                    start = 20.dp
+                    top = 645.dp,
+                    start = 300.dp
                 ),
             backgroundColor = MaterialTheme.pawsyColors.fondoAgregarMascota
         ) {

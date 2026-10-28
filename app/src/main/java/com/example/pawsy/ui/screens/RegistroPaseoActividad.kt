@@ -177,7 +177,7 @@ fun RegistroPaseoActividad(
                         when (item) {
                             "Perfil mascota" -> navController.navigate("petProfile")
                             "Perfil usuario" -> navController.navigate("userProfile")
-                            "Recomendaciones" -> navController.navigate("recom")
+                            "Recomendaciones" -> navController.navigate("recom/g0it5yJqSri9ncX7Uonj")
 
                         }
                     },

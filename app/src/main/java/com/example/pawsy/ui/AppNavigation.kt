@@ -42,8 +42,13 @@ fun AppNavigation() {
             RegistroPaseoActividad(navController)
         }
         composable("recom") {
-            MyRecommText(navController)
+            MyRecommText(navController, breedId = "g0it5yJqSri9ncX7Uonj", edad = 3)
         }
-
+        composable("food") {
+            FoodRecognition(navController)
+        }
+        composable("eventos") {
+            EventosScreen(navController)
+        }
     }
 }

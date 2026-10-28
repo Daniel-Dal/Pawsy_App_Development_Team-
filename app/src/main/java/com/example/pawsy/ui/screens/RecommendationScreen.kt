@@ -33,13 +33,41 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-
-
+import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.LaunchedEffect
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.DocumentSnapshot
 @Composable
-fun MyRecommText(navController: NavController) {
+fun MyRecommText(navController: NavController, breedId: String, edad: Int) {
     PawsyTheme {
-        val razaEjemplo = stringResource(id = R.string.raza_ejemplo)
-        val recomendaciones = stringArrayResource(id = R.array.recomendaciones_ejemplo)
+        var razaEjemplo by remember { mutableStateOf("") }
+        var recomendaciones by remember { mutableStateOf<List<String>>(emptyList()) }
+        var recomPorRango by remember { mutableStateOf<Map<String, List<String>>>(emptyMap()) }
+
+        val rango = when {
+            edad <= 1 -> "0-1"
+            edad <= 7 -> "2-7"
+            else -> "8+"
+        }
+        LaunchedEffect(breedId) {
+            android.util.Log.d("PAWSY", "breedId recibido = '$breedId'")
+            FirebaseFirestore.getInstance().collection("razas").document(breedId).get()
+                .addOnSuccessListener { doc: DocumentSnapshot ->
+                    razaEjemplo = doc.getString("nombre") ?: ""
+                    val mapa = doc.get("recomendaciones") as? Map<*, *>
+                    recomPorRango = mapa?.entries?.associate { (k, v) ->
+                        k.toString() to ((v as? List<*>)?.filterIsInstance<String>() ?: emptyList())
+                    } ?: emptyMap()
+                }
+                .addOnFailureListener { e ->
+                    android.util.Log.e("PAWSY", "Error Firestore", e)
+                }
+        }
 
         Box(
             modifier = Modifier.fillMaxSize()
@@ -114,7 +142,7 @@ fun MyRecommText(navController: NavController) {
                         verticalArrangement = Arrangement.spacedBy(50.dp)
                     ) {
 
-                        recomendaciones.forEach { recomendacion ->
+                        (recomPorRango[rango] ?: emptyList()).forEach { recomendacion ->
                             Text(
                                 text = recomendacion,
                                 style = MaterialTheme.typography.bodyLarge,
@@ -137,6 +165,6 @@ fun MyRecommText(navController: NavController) {
 @Composable
 fun MyRecommTextPreview() {
     val navController = rememberNavController()
-    MyRecommText(navController = navController)
+    MyRecommText(navController = navController, breedId = "", edad = 3)
 }
 

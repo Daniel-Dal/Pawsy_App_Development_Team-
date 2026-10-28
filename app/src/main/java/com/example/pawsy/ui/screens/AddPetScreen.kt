@@ -241,13 +241,13 @@ fun MyText(navController: NavController) {
             }
         }
         BasicCircleBotton (
-            onClick = { },
+            onClick = {  navController.navigate("myPets")},
             size = 50.dp,
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(
-                    top = 20.dp,
-                    start = 20.dp
+                    top = 645.dp,
+                    start = 300.dp
                 ),
             backgroundColor = MaterialTheme.pawsyColors.fondoSeleccionMascotaApp
         ) {
@@ -255,7 +255,8 @@ fun MyText(navController: NavController) {
                 painter = painterResource(R.drawable.return_arrow),
                 contentDescription = "Mascota",
                 modifier = Modifier.size(40.dp)
-                    .offset(x = (-5).dp),
+                    .offset(x = (-5).dp)
+                   /* .padding(start = 300.dp)*/,
                 tint = MaterialTheme.pawsyColors.fondoAgregarMascota
             )
         }

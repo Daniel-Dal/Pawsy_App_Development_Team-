@@ -48,6 +48,7 @@ fun PetSideMenu(
         "Paseos y actividad",
         "Recomendaciones",
         "Reconocimiento visual",
+        "Eventos",
         "Configuración",
         "Salir"
     )
