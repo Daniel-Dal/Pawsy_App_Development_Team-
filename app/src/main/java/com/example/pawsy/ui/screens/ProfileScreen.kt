@@ -28,6 +28,9 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
 import com.example.pawsy.ui.components.PetSideMenu
+import com.example.pawsy.ui.components.PawsyButton
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 
 data class PetProfile(
     val nombre: String = "",
@@ -76,37 +79,65 @@ fun ProfileScreen(
                     PawIconBadge(onClick = { menuExpanded = !menuExpanded })
                 }
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState())
+                ){
+                    Spacer(modifier = Modifier.height(32.dp))
 
-                // Campos de solo lectura: muestran los datos recibidos en petProfile
-                PetProfileField(label = "Nombre", value = petProfile.nombre)
+                    // Campos de solo lectura: muestran los datos recibidos en petProfile
+                    PetProfileField(label = "Nombre", value = petProfile.nombre)
 
-                Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
-                PetProfileField(label = "Especie", value = petProfile.especie)
+                    PetProfileField(label = "Especie", value = petProfile.especie)
 
-                Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
-                PetProfileField(label = "Edad", value = petProfile.edad)
+                    PetProfileField(label = "Edad", value = petProfile.edad)
 
-                Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
-                PetProfileField(label = "Raza", value = petProfile.raza)
+                    PetProfileField(label = "Raza", value = petProfile.raza)
 
-                Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
-                PetProfileField(label = "Peso", value = petProfile.peso)
+                    PetProfileField(label = "Peso", value = petProfile.peso)
 
-                Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.height(48.dp))
 
-                // Botón flotante inferior derecho (huella) — ej. para ir a editar
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    PawSubmitButton(onClick = { menuExpanded = !menuExpanded })
+                    // Botón de historias médicas
+                    Box(contentAlignment = Alignment.Center) {
+                        PawsyButton(
+                            onClick = { navController.navigate("historias") },
+                            modifier = Modifier.height(56.dp)
+                        )
+                        Text(
+                            text = "Historia médica",
+                            color = colors.blanco,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+
+
+                    // Botón flotante inferior derecho (huella) — ej. para ir a editar
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        PawSubmitButton(onClick = { menuExpanded = !menuExpanded })
+                    }
                 }
-            }
+                }
+
+                }
+
+
 
             // Menú lateral desplegable. Sin funcionalidad todavía: solo muestra las opciones.
             AnimatedVisibility(
@@ -128,7 +159,7 @@ fun ProfileScreen(
             }
         }
     }
-}
+
 
 
 

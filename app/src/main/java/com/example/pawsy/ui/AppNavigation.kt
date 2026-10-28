@@ -44,6 +44,9 @@ fun AppNavigation() {
         composable("recom") {
             MyRecommText(navController)
         }
+        composable("historias") {
+            MedicalRecordsScreen(navController)
+        }
 
     }
 }
