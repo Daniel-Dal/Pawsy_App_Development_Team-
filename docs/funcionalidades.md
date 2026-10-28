@@ -9,6 +9,5 @@ La siguientes es una lista de las funcionalidades disponibles para el usuario de
 5. Almacenamiento de historia clinica
 6. Acceso a geolocalización de veterinarias y tiendas petshop
 7. gestión de cronograma de actividades correspondientes a la mascota
-8. comunidad de cuidado de mascotas
-9. promoción de eventos de mascota
+8. promoción de eventos de mascota
 ...
