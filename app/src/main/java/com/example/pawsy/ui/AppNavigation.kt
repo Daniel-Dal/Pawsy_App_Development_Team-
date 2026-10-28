@@ -47,6 +47,9 @@ fun AppNavigation() {
         composable("historias") {
             MedicalRecordsScreen(navController)
         }
+        composable("nearbyVets") {
+            NearbyVetsScreen(navController)
+        }
 
     }
 }

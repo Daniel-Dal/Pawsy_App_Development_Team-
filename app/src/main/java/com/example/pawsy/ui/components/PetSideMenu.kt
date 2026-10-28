@@ -47,6 +47,7 @@ fun PetSideMenu(
         "Salud",
         "Paseos y actividad",
         "Recomendaciones",
+        "Veterinarias cercanas",
         "Reconocimiento visual",
         "Configuración",
         "Salir"
