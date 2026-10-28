@@ -21,7 +21,10 @@ val supabaseKey: String = propiedadesLocales.getProperty(
     "SUPABASE_KEY",
     propiedadesLocales.getProperty("SUPABASE_ANON_KEY", "")
 )
-
+val localProps = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) load(file.inputStream())
+}
 android {
     namespace = "com.example.pawsy"
     compileSdk = 37
@@ -38,6 +41,11 @@ android {
         buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
         buildConfigField("String", "SUPABASE_KEY", "\"$supabaseKey\"")
         buildConfigField("String", "SUPABASE_ANON_KEY", "\"$supabaseKey\"")
+        buildConfigField(
+            "String",
+            "MAPTILER_KEY",
+            "\"${localProps.getProperty("MAPTILER_KEY", "")}\""
+        )
     }
 
     buildFeatures {
@@ -97,4 +105,6 @@ dependencies {
 
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    implementation("org.osmdroid:osmdroid-android:6.1.20")
 }

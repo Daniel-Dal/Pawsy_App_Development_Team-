@@ -215,6 +215,8 @@ fun ProfileScreen(
                         "Perfil usuario" -> navController.navigate("userProfile")
                         "Paseos y actividad" -> navController.navigate("pya")
                         "Recomendaciones" -> navController.navigate("recom")
+                        "Veterinarias cercanas" -> navController.navigate("nearbyVets")
+
                     }
                 },
                 onDismiss = { menuExpanded = false }

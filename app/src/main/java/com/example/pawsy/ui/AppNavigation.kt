@@ -66,6 +66,9 @@ fun AppNavigation() {
                 mascotaId = backStackEntry.arguments?.getString("mascotaId")
             )
         }
+        composable("nearbyVets") {
+            NearbyVetsScreen(navController)
+        }
 
     }
 }

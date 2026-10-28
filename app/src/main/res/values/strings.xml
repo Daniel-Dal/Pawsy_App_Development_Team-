@@ -45,6 +45,14 @@
     <string name="boton_subir_historia">Subir historia médica</string>
     <string name="lista_historias">Mis archivos</string>
 
+    //Titulos pantalla mapa
+    <string name="titulo_lugares_cercanos">Veterinarias y tiendas cercanas</string>
+    <string name="marcador_mi_ubicacion">Tú estás aquí</string>
+    <string name="lugar_veterinaria">Veterinaria</string>
+    <string name="lugar_tienda_mascotas">Tienda de mascotas</string>
+    <string name="lugar_sin_nombre">Sin nombre</string>
+    <string name="error_buscando_lugares">Error buscando lugares</string>
+
     <string-array name="recomendaciones_ejemplo">
         <item>Ejercicio diario: necesita al menos una hora de actividad al día, como caminatas largas o juegos de buscar.</item>
         <item>Alimentación: dale croquetas de buena calidad y ajusta las porciones según su edad y peso para evitar el sobrepeso.</item>
