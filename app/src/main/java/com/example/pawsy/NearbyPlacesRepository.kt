@@ -19,24 +19,25 @@ data class NearbyPlace(
 
 object NearbyPlacesRepository {
     private val client = OkHttpClient.Builder()
-        .connectTimeout(15, TimeUnit.SECONDS)
-        .readTimeout(40, TimeUnit.SECONDS)
-        .callTimeout(45, TimeUnit.SECONDS)
+        .connectTimeout(10, TimeUnit.SECONDS)
+        .readTimeout(20, TimeUnit.SECONDS)
+        .callTimeout(25, TimeUnit.SECONDS)
         .build()
 
     // Si el primer servidor falla o tarda, se prueba el siguiente
     private val ENDPOINTS = listOf(
         "https://overpass-api.de/api/interpreter",
-        "https://overpass.private.coffee/api/interpreter"
+        "https://overpass.private.coffee/api/interpreter",
+        "https://overpass.kumi.systems/api/interpreter"
     )
 
     private const val USER_AGENT = "PawsyApp/1.0 (contactopawsyapp@gmail.com)"
 
-    suspend fun nearby(lat: Double, lon: Double, radiusMeters: Int = 3000): Result<List<NearbyPlace>> =
+    suspend fun nearby(lat: Double, lon: Double, radiusMeters: Int = 2000): Result<List<NearbyPlace>> =
         withContext(Dispatchers.IO) {
             runCatching {
                 val query = """
-                    [out:json][timeout:25];
+                    [out:json][timeout:15];
                     (
                       nwr["amenity"="veterinary"](around:$radiusMeters,$lat,$lon);
                       nwr["shop"="pet"](around:$radiusMeters,$lat,$lon);
