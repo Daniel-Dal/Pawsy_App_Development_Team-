@@ -71,7 +71,7 @@ fun NearbyVetsScreen(navController: NavController) {
 
         fun search(point: LatLng) = scope.launch {
             loading = true
-            NearbyPlacesRepository.nearby(point.latitude, point.longitude)
+            NearbyPlacesRepository.nearby(context, point.latitude, point.longitude)
                 .onSuccess { places = it }
                 .onFailure {
                     Toast.makeText(context, it.message ?: errorText, Toast.LENGTH_LONG).show()
