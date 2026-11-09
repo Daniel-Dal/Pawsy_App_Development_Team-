@@ -25,6 +25,7 @@
     <string name="boton_notificacion">Notificaciones</string>
     <string name="contrase_a">Contraseña</string>
     <string name="olvidaste_tu_contrase_a">Olvidaste tu contraseña?</string>
+    <string name="reconocimiento_visual">Reconocimiento visual</string>
 
     <string-array name="opciones_especie">
         <item>Felino</item>
@@ -73,7 +74,13 @@
     <string name="mascota_eliminar_titulo">¿Eliminar foto?</string>
     <string name="mascota_eliminar_mensaje">Se quitará la foto de perfil de tu mascota.</string>
     <string name="mascota_eliminar_confirmar">Eliminar</string>
+    <string name="mascota_eliminar_mascota">Eliminar mascota</string>
     <string name="mascota_cancelar">Cancelar</string>
+    <string name="mascota_eliminada">Mascota eliminada</string>
+    <string name="mascota_error_eliminar">No se pudo eliminar la mascota</string>
+    <string name="mascota_eliminar_mascota_titulo">¿Eliminar mascota?</string>
+    <string name="mascota_eliminar_mascota_mensaje">Vas a eliminar a %1$s de tus mascotas. Esta acción no se puede deshacer.</string>
+
 
     <string-array name="recomendaciones_ejemplo">
         <item>Ejercicio diario: necesita al menos una hora de actividad al día, como caminatas largas o juegos de buscar.</item>

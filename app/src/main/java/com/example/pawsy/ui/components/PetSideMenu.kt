@@ -43,12 +43,11 @@ fun PetSideMenu(
     val menuItems = listOf(
         "Perfil mascota",
         "Perfil usuario",
-        "Alimentación",
-        "Salud",
         "Paseos y actividad",
         "Recomendaciones",
         "Veterinarias cercanas",
         "Reconocimiento visual",
+        "Eventos",
         "Configuración",
         "Salir"
     )

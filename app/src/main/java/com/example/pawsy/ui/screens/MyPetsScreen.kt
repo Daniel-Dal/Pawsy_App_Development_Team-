@@ -113,15 +113,15 @@ fun MyPetsScreen(navController: NavController) {
             .fillMaxSize()
             .background(MaterialTheme.pawsyColors.fondoSeleccionMascotaApp)
     ) {
-
+/*
         BasicCircleBotton(
             onClick = { },
             size = 60.dp,
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(
-                    top = 30.dp,
-                    start = 20.dp
+                    top = 645.dp,
+                    start = 300.dp
                 ),
             backgroundColor = MaterialTheme.pawsyColors.fondoAgregarMascota
         ) {
@@ -133,7 +133,7 @@ fun MyPetsScreen(navController: NavController) {
                     .offset(x = (-5).dp),
                 tint = MaterialTheme.pawsyColors.fondoSeleccionMascotaApp
             )
-        }
+        }*/
 
         // Ícono que abre el menú lateral (igual que en ProfileScreen)
         Image(
@@ -206,6 +206,7 @@ fun MyPetsScreen(navController: NavController) {
 
                 BasicCircleBotton(
                     onClick = {
+                        MascotaSeleccionada.id = mascota.id
                         navController.navigate("petProfile/${mascota.id}")
                     },
                     size = 120.dp,
@@ -273,12 +274,12 @@ fun MyPetsScreen(navController: NavController) {
 
         // Huella inferior (igual que en ProfileScreen): también abre el menú
         Image(
-            painter = painterResource(R.drawable.ic_paw_outline),
+            painter = painterResource(R.drawable.ic_paw_menu),
             contentDescription = "Abrir menú",
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 24.dp, bottom = 32.dp)
-                .size(44.dp)
+                .size(70.dp)
                 .clickable { menuExpanded = !menuExpanded }
         )
 

@@ -26,8 +26,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
@@ -39,6 +44,8 @@ import com.example.pawsy.ui.components.PetSideMenu
 import com.example.pawsy.ui.theme.PawsyTheme
 import com.example.pawsy.ui.theme.colorPataSeleccionMascota
 import com.example.pawsy.ui.theme.pawsyColors
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -87,6 +94,26 @@ private suspend fun guardarUrlImagenMascota(mascotaId: String, url: String) {
         .await()
 }
 
+/**
+ * Elimina la mascota: quita su id del arreglo "mascotas" del usuario y borra su documento.
+ * Se hace en un solo batch, así o se hacen las dos cosas o ninguna.
+ */
+private suspend fun eliminarMascotaDelUsuario(mascotaId: String) {
+    val uid = FirebaseAuth.getInstance().currentUser?.uid
+        ?: error("No hay sesión iniciada")
+    val db = FirebaseFirestore.getInstance()
+
+    db.batch()
+        .update(
+            db.collection("usuarios").document(uid),
+            "mascotas",
+            FieldValue.arrayRemove(mascotaId)
+        )
+        .delete(db.collection("mascotas").document(mascotaId))
+        .commit()
+        .await()
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
@@ -105,14 +132,20 @@ fun ProfileScreen(
     var mensajeError by remember { mutableStateOf<String?>(null) }
 
     var subiendoFoto by remember { mutableStateOf(false) }
-    var mostrarDialogoEliminar by remember { mutableStateOf(false) }
+    var mostrarDialogoEliminarFoto by remember { mutableStateOf(false) }
 
-    // Textos desde strings.xml (se leen aquí porque se usan dentro de callbacks)
+    var eliminandoMascota by remember { mutableStateOf(false) }
+    var mostrarDialogoEliminarMascota by remember { mutableStateOf(false) }
+
+    // Textos desde strings.xml
     val fotoActualizadaText = stringResource(R.string.mascota_foto_actualizada)
     val fotoEliminadaText = stringResource(R.string.mascota_foto_eliminada)
     val errorFotoText = stringResource(R.string.mascota_error_foto)
+    val mascotaEliminadaText = stringResource(R.string.mascota_eliminada)
+    val errorEliminarText = stringResource(R.string.mascota_error_eliminar)
 
     LaunchedEffect(mascotaId) {
+        if (mascotaId != null) MascotaSeleccionada.id = mascotaId
         if (mascotaId == null) {
             cargando = false
             return@LaunchedEffect
@@ -251,33 +284,37 @@ fun ProfileScreen(
                     // Cambiar / eliminar foto
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         ContinueBotton(
                             onClick = {
                                 if (mascotaId != null && !subiendoFoto) picker.launch("image/*")
                             },
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(36.dp),
                             textColor = colors.textEditTextAgregarMascota,
                             borderColor = colors.textEditTextAgregarMascota,
                             borderWidth = 1.dp
                         ) {
-                            Text(text = stringResource(R.string.mascota_cambiar_foto))
+                            BotonFotoTexto(text = stringResource(R.string.mascota_cambiar_foto))
                         }
 
                         if (petProfile.urlImagen.isNotBlank()) {
                             ContinueBotton(
                                 onClick = {
                                     if (mascotaId != null && !subiendoFoto) {
-                                        mostrarDialogoEliminar = true
+                                        mostrarDialogoEliminarFoto = true
                                     }
                                 },
-                                modifier = Modifier.weight(1f),
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(36.dp),
                                 textColor = colors.textEditTextAgregarMascota,
                                 borderColor = colors.textEditTextAgregarMascota,
                                 borderWidth = 1.dp
                             ) {
-                                Text(text = stringResource(R.string.mascota_eliminar_foto))
+                                BotonFotoTexto(text = stringResource(R.string.mascota_eliminar_foto))
                             }
                         }
                     }
@@ -309,7 +346,9 @@ fun ProfileScreen(
                     Box(contentAlignment = Alignment.Center) {
                         PawsyButton(
                             onClick = {
-                                if (mascotaId != null) navController.navigate("historias/$mascotaId")
+                                if (mascotaId != null) {
+                                    navController.navigate("historias/$mascotaId")
+                                }
                             },
                             modifier = Modifier.height(56.dp)
                         )
@@ -320,6 +359,31 @@ fun ProfileScreen(
                         )
                     }
 
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    // Eliminar mascota
+                    ContinueBotton(
+                        onClick = {
+                            if (mascotaId != null && !eliminandoMascota) {
+                                mostrarDialogoEliminarMascota = true
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth(0.7f)
+                            .height(40.dp)
+                            .align(Alignment.CenterHorizontally),
+                        textColor = MaterialTheme.colorScheme.error,
+                        borderColor = MaterialTheme.colorScheme.error,
+                        borderWidth = 1.dp
+                    ) {
+                        Text(
+                            text = stringResource(R.string.mascota_eliminar_mascota),
+                            fontSize = 13.sp,
+                            maxLines = 1,
+                            softWrap = false
+                        )
+                    }
+
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Botón flotante inferior derecho (huella)
@@ -327,7 +391,9 @@ fun ProfileScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
                     ) {
-                        PawSubmitButton(onClick = { menuExpanded = !menuExpanded })
+                        PawSubmitButton(
+                            onClick = { menuExpanded = !menuExpanded }
+                        )
                     }
                 }
             }
@@ -336,8 +402,12 @@ fun ProfileScreen(
         // Menú lateral desplegable
         AnimatedVisibility(
             visible = menuExpanded,
-            enter = slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }),
-            exit = slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }),
+            enter = slideInHorizontally(
+                initialOffsetX = { fullWidth -> fullWidth }
+            ),
+            exit = slideOutHorizontally(
+                targetOffsetX = { fullWidth -> fullWidth }
+            ),
             modifier = Modifier.align(Alignment.CenterEnd)
         ) {
             PetSideMenu(
@@ -347,23 +417,24 @@ fun ProfileScreen(
                         "Paseos y actividad" -> navController.navigate("pya")
                         "Recomendaciones" -> navController.navigate("recom")
                         "Veterinarias cercanas" -> navController.navigate("nearbyVets")
-
+                        "Reconocimiento visual" -> navController.navigate("food")
+                        "Eventos" -> navController.navigate("eventos")
                     }
                 },
                 onDismiss = { menuExpanded = false }
             )
         }
 
-        // Confirmación para eliminar la foto
-        if (mostrarDialogoEliminar) {
+        // Confirmación para eliminar solo la foto
+        if (mostrarDialogoEliminarFoto) {
             AlertDialog(
-                onDismissRequest = { mostrarDialogoEliminar = false },
+                onDismissRequest = { mostrarDialogoEliminarFoto = false },
                 title = { Text(text = stringResource(R.string.mascota_eliminar_titulo)) },
                 text = { Text(text = stringResource(R.string.mascota_eliminar_mensaje)) },
                 confirmButton = {
                     TextButton(
                         onClick = {
-                            mostrarDialogoEliminar = false
+                            mostrarDialogoEliminarFoto = false
                             if (mascotaId == null) return@TextButton
                             scope.launch {
                                 subiendoFoto = true
@@ -386,13 +457,89 @@ fun ProfileScreen(
                     }
                 },
                 dismissButton = {
-                    TextButton(onClick = { mostrarDialogoEliminar = false }) {
+                    TextButton(onClick = { mostrarDialogoEliminarFoto = false }) {
+                        Text(text = stringResource(R.string.mascota_cancelar))
+                    }
+                }
+            )
+        }
+
+        // Confirmación para eliminar la mascota completa
+        if (mostrarDialogoEliminarMascota) {
+            AlertDialog(
+                onDismissRequest = { mostrarDialogoEliminarMascota = false },
+                title = { Text(text = stringResource(R.string.mascota_eliminar_mascota_titulo)) },
+                text = {
+                    Text(
+                        text = stringResource(
+                            R.string.mascota_eliminar_mascota_mensaje,
+                            petProfile.nombre
+                        )
+                    )
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            mostrarDialogoEliminarMascota = false
+                            if (mascotaId == null || eliminandoMascota) return@TextButton
+                            scope.launch {
+                                eliminandoMascota = true
+                                try {
+                                    eliminarMascotaDelUsuario(mascotaId)
+                                    Toast.makeText(
+                                        context,
+                                        mascotaEliminadaText,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    // Volver a "Tus mascotas" con la lista recargada
+                                    navController.navigate("myPets") {
+                                        popUpTo("myPets") { inclusive = true }
+                                    }
+                                } catch (e: Exception) {
+                                    eliminandoMascota = false
+                                    Toast.makeText(
+                                        context,
+                                        "$errorEliminarText: ${e.message}",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
+                        }
+                    ) {
+                        Text(
+                            text = stringResource(R.string.mascota_eliminar_confirmar),
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { mostrarDialogoEliminarMascota = false }) {
                         Text(text = stringResource(R.string.mascota_cancelar))
                     }
                 }
             )
         }
     }
+}
+
+/** Texto de los botones de foto: centrado vertical sin padding extra de la fuente. */
+@Composable
+private fun BotonFotoTexto(text: String) {
+    Text(
+        text = text,
+        fontSize = 12.sp,
+        lineHeight = 12.sp,
+        maxLines = 1,
+        softWrap = false,
+        textAlign = TextAlign.Center,
+        style = TextStyle(
+            platformStyle = PlatformTextStyle(includeFontPadding = false),
+            lineHeightStyle = LineHeightStyle(
+                alignment = LineHeightStyle.Alignment.Center,
+                trim = LineHeightStyle.Trim.Both
+            )
+        )
+    )
 }
 
 @Composable
@@ -445,13 +592,13 @@ private fun PawIconBadge(
 @Composable
 private fun PawSubmitButton(
     onClick: () -> Unit,
-    pawImage: Painter = painterResource(R.drawable.ic_paw_outline)
+    pawImage: Painter = painterResource(R.drawable.ic_paw_menu)
 ) {
     Image(
         painter = pawImage,
         contentDescription = "Guardar perfil",
         modifier = Modifier
-            .size(44.dp)
+            .size(70.dp)
             .clickable(onClick = onClick)
     )
 }

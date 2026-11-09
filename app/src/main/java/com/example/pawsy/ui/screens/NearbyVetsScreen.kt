@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.LocationManager
+import com.google.maps.android.compose.rememberMarkerState
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -13,17 +14,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import com.example.pawsy.R
 import com.example.pawsy.data.NearbyPlace
@@ -31,45 +25,28 @@ import com.example.pawsy.data.NearbyPlacesRepository
 import com.example.pawsy.data.PlaceKind
 import com.example.pawsy.ui.theme.PawsyTheme
 import com.example.pawsy.ui.theme.pawsyColors
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.launch
-import org.osmdroid.config.Configuration
-import org.osmdroid.util.GeoPoint
-import org.osmdroid.views.MapView
-import org.osmdroid.views.overlay.Marker
-import com.example.pawsy.BuildConfig
-import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase
-import org.osmdroid.util.MapTileIndex
-import android.graphics.Color
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
-private val BOGOTA = GeoPoint(4.7110, -74.0721)
 
-private fun Marker.setPinColor(context: Context, color: Int) {
-    val pin = ContextCompat.getDrawable(context, org.osmdroid.library.R.drawable.marker_default)
-        ?.mutate() ?: return
-    DrawableCompat.setTint(pin, color)
-    icon = pin
-}
+private val BOGOTA = LatLng(4.7110, -74.0721)
 
-private val MapTilerSource = object : OnlineTileSourceBase(
-    "MapTiler", 0, 20, 256, ".png",
-    arrayOf("https://api.maptiler.com/maps/streets-v2/256/")
-) {
-    override fun getTileURLString(pMapTileIndex: Long): String =
-        baseUrl +
-                MapTileIndex.getZoom(pMapTileIndex) + "/" +
-                MapTileIndex.getX(pMapTileIndex) + "/" +
-                MapTileIndex.getY(pMapTileIndex) + mImageFilenameEnding +
-                "?key=" + BuildConfig.MAPTILER_KEY
-}
+private const val HUE_GREEN = BitmapDescriptorFactory.HUE_GREEN
+private const val HUE_RED = BitmapDescriptorFactory.HUE_RED
 
 @SuppressLint("MissingPermission")
-private fun lastKnownLocation(context: Context): GeoPoint? {
+private fun lastKnownLocation(context: Context): LatLng? {
     val lm = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
     val best = listOf(LocationManager.GPS_PROVIDER, LocationManager.NETWORK_PROVIDER)
         .mapNotNull { runCatching { lm.getLastKnownLocation(it) }.getOrNull() }
         .maxByOrNull { it.time }
-    return best?.let { GeoPoint(it.latitude, it.longitude) }
+    return best?.let { LatLng(it.latitude, it.longitude) }
 }
 
 @Composable
@@ -77,8 +54,6 @@ fun NearbyVetsScreen(navController: NavController) {
     PawsyTheme {
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
-
-        // Textos desde strings.xml (se leen aquí porque `update` del mapa no es composable)
 
         val myLocationText = stringResource(R.string.marcador_mi_ubicacion)
         val vetText = stringResource(R.string.lugar_veterinaria)
@@ -90,26 +65,16 @@ fun NearbyVetsScreen(navController: NavController) {
         var places by remember { mutableStateOf<List<NearbyPlace>>(emptyList()) }
         var loading by remember { mutableStateOf(false) }
 
-        // Configuración obligatoria de osmdroid: identificar la app
-        remember {
-            Configuration.getInstance().load(
-                context,
-                context.getSharedPreferences("osmdroid", Context.MODE_PRIVATE)
-            )
-            Configuration.getInstance().userAgentValue = "PawsyApp/1.0 (contactopawsyapp@gmail.com)"
-            true
+        val cameraPositionState = rememberCameraPositionState {
+            position = CameraPosition.fromLatLngZoom(BOGOTA, 15f)
         }
 
-        fun search(point: GeoPoint) = scope.launch {
+        fun search(point: LatLng) = scope.launch {
             loading = true
             NearbyPlacesRepository.nearby(point.latitude, point.longitude)
                 .onSuccess { places = it }
                 .onFailure {
-                    Toast.makeText(
-                        context,
-                        it.message ?: errorText,
-                        Toast.LENGTH_LONG
-                    ).show()
+                    Toast.makeText(context, it.message ?: errorText, Toast.LENGTH_LONG).show()
                 }
             loading = false
         }
@@ -124,52 +89,46 @@ fun NearbyVetsScreen(navController: NavController) {
 
         LaunchedEffect(Unit) { permission.launch(Manifest.permission.ACCESS_FINE_LOCATION) }
 
+        // Mover la cámara cuando cambia el centro
+        LaunchedEffect(center) {
+            cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(center, 15f))
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.pawsyColors.fondoPerfil)
         ) {
-
-
             if (loading) LinearProgressIndicator(Modifier.fillMaxWidth())
 
-            AndroidView(
+            GoogleMap(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth(),
-                factory = { ctx ->
-                    MapView(ctx).apply {
-                        setTileSource(MapTilerSource)
-                        setMultiTouchControls(true)
-                        controller.setZoom(15.0)
-                    }
-                },
-                update = { map ->
-                    map.controller.setCenter(center)
-                    map.overlays.clear()
+                cameraPositionState = cameraPositionState
+            ) {
+                // Tu ubicación (verde)
+                val myMarkerState = rememberMarkerState(position = center)
+                LaunchedEffect(center) { myMarkerState.position = center }
 
-                    // Tu ubicación (verde)
-                    map.overlays.add(Marker(map).apply {
-                        position = center
-                        title = myLocationText
-                        setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                        setPinColor(map.context, Color.parseColor("#43A047"))
-                    })
+                Marker(
+                    state = myMarkerState,
+                    title = myLocationText,
+                    icon = BitmapDescriptorFactory.defaultMarker(HUE_GREEN)
+                )
 
-// Veterinarias y tiendas (rojo)
-                    places.forEach { p ->
-                        map.overlays.add(Marker(map).apply {
-                            position = GeoPoint(p.lat, p.lon)
-                            title = p.name ?: noNameText
-                            snippet = if (p.kind == PlaceKind.VET) vetText else storeText
-                            setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                            setPinColor(map.context, Color.parseColor("#E53935"))
-                        })
+                // Veterinarias y tiendas (rojo)
+                places.forEach { p ->
+                    key(p.lat, p.lon) {
+                        Marker(
+                            state = rememberMarkerState(position = LatLng(p.lat, p.lon)),
+                            title = p.name ?: noNameText,
+                            snippet = if (p.kind == PlaceKind.VET) vetText else storeText,
+                            icon = BitmapDescriptorFactory.defaultMarker(HUE_RED)
+                        )
                     }
-                    map.invalidate()
-                },
-                onRelease = { it.onDetach() }
-            )
+                }
+            }
         }
     }
 }
