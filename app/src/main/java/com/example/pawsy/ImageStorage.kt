@@ -56,7 +56,7 @@ suspend fun subirImagen(context: Context, imagenUri: Uri): String =
 
         clienteHttp.newCall(request).execute().use { resp ->
             if (!resp.isSuccessful) {
-                val cuerpo = resp.body?.string()
+                val cuerpo = resp.body.string()
                 android.util.Log.e("SUBIR_IMAGEN", "code=${resp.code} cuerpo=$cuerpo")
                 error("Error al subir (${resp.code}): $cuerpo")
             }
