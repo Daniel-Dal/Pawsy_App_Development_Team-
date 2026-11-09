@@ -1,8 +1,5 @@
 package com.example.pawsy.ui.screens
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,7 +20,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.pawsy.R
 import com.example.pawsy.ui.components.PawsyButton
-import com.example.pawsy.ui.components.PetSideMenu
+import com.example.pawsy.ui.components.PetSideMenuOverlay
 import com.example.pawsy.ui.theme.PawsyTheme
 import com.example.pawsy.ui.theme.pawsyColors
 import com.google.firebase.firestore.FirebaseFirestore
@@ -37,7 +34,6 @@ data class PetProfile(
     val peso: String = ""
 )
 
-/** Convierte números o texto de Firestore a texto para mostrar. */
 private fun valorATexto(valor: Any?): String = when (valor) {
     null -> ""
     is Double -> if (valor % 1.0 == 0.0) valor.toLong().toString() else valor.toString()
@@ -68,7 +64,6 @@ fun ProfileScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
     mascotaId: String? = null,
-    onEditClick: () -> Unit = {}
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
 
@@ -199,31 +194,11 @@ fun ProfileScreen(
             }
         }
 
-        // Menú lateral desplegable
-        AnimatedVisibility(
+        PetSideMenuOverlay(
+            navController = navController,
             visible = menuExpanded,
-            enter = slideInHorizontally(
-                initialOffsetX = { fullWidth -> fullWidth }
-            ),
-            exit = slideOutHorizontally(
-                targetOffsetX = { fullWidth -> fullWidth }
-            ),
-            modifier = Modifier.align(Alignment.CenterEnd)
-        ) {
-            PetSideMenu(
-                onItemClick = { item ->
-                    when (item) {
-                        "Perfil usuario" -> navController.navigate("userProfile")
-                        "Paseos y actividad" -> navController.navigate("pya")
-                        "Recomendaciones" -> navController.navigate("recom")
-                        "Veterinarias cercanas" -> navController.navigate("nearbyVets")
-                        "Reconocimiento visual" -> navController.navigate("food")
-                        "Eventos" -> navController.navigate("eventos")
-                    }
-                },
-                onDismiss = { menuExpanded = false }
-            )
-        }
+            onDismiss = { menuExpanded = false }
+        )
     }
 }
 

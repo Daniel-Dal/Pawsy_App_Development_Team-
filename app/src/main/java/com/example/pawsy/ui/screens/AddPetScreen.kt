@@ -48,6 +48,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.compose.rememberNavController
+import androidx.compose.foundation.layout.statusBarsPadding
 import com.example.pawsy.ui.components.BasicCircleBotton
 import com.example.pawsy.ui.theme.pawsyColors
 import androidx.compose.foundation.rememberScrollState
@@ -179,7 +180,7 @@ fun MyText(navController: NavController) {
         )  {
             Row(modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 48.dp),
+                .padding(top = 90.dp),
                 verticalAlignment = Alignment.CenterVertically) {
 
                 Text(text = stringResource(id = R.string.titulo_pantalla5),
@@ -514,13 +515,16 @@ fun MyText(navController: NavController) {
             }
         }
         BasicCircleBotton(
-            onClick = { navController.navigate("myPets") },
+            onClick = {
+                if (!navController.popBackStack()) navController.navigate("myPets")
+            },
             size = 50.dp,
             modifier = Modifier
                 .align(Alignment.TopStart)
+                .statusBarsPadding()
                 .padding(
-                    top = 645.dp,
-                    start = 300.dp
+                    top = 12.dp,
+                    start = 16.dp
                 ),
             backgroundColor = MaterialTheme.pawsyColors.fondoSeleccionMascotaApp
         ) {
