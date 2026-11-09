@@ -120,7 +120,7 @@ fun ProfileScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
     mascotaId: String? = null,
-    onEditClick: () -> Unit = {}
+
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -411,14 +411,29 @@ fun ProfileScreen(
             modifier = Modifier.align(Alignment.CenterEnd)
         ) {
             PetSideMenu(
+                menuItems = listOf(
+                    "Perfil usuario",
+                    "Paseos y actividad",
+                    "Recomendaciones",
+                    "Veterinarias cercanas",
+                    "Reconocimiento visual",
+                    "Eventos",
+                    "Salir"
+                ),
                 onItemClick = { item ->
                     when (item) {
-                        "Perfil usuario" -> navController.navigate("userProfile")
+                        "Perfil usuario" -> navController.navigate("userData")
                         "Paseos y actividad" -> navController.navigate("pya")
                         "Recomendaciones" -> navController.navigate("recom")
                         "Veterinarias cercanas" -> navController.navigate("nearbyVets")
                         "Reconocimiento visual" -> navController.navigate("food")
                         "Eventos" -> navController.navigate("eventos")
+                        "Salir" -> {
+                            FirebaseAuth.getInstance().signOut()
+                            navController.navigate("login") {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        }
                     }
                 },
                 onDismiss = { menuExpanded = false }

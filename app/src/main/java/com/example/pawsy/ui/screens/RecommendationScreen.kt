@@ -179,6 +179,13 @@ fun MyRecommText(navController: NavController, breedId: String, edad: Int, masco
                 modifier = Modifier.align(Alignment.CenterEnd)
             ) {
                 PetSideMenu(
+                    menuItems = listOf(
+                        "Perfil mascota",
+                        "Perfil usuario",
+                        "Paseos y actividad",
+                        "Veterinarias cercanas",
+                        "Eventos"
+                    ),
                     onItemClick = { item ->
                         when (item) {
                             "Perfil mascota" -> {
@@ -189,10 +196,9 @@ fun MyRecommText(navController: NavController, breedId: String, edad: Int, masco
                                     navController.navigate("myPets")
                                 }
                             }
-                            "Perfil usuario" -> navController.navigate("userProfile")
+                            "Perfil usuario" -> navController.navigate("userData")
                             "Paseos y actividad" -> navController.navigate("pya")
                             "Veterinarias cercanas" -> navController.navigate("nearbyVets")
-                            "Reconocimiento visual" -> navController.navigate("food")
                             "Eventos" -> navController.navigate("eventos")
                         }
                     },

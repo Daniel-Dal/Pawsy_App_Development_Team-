@@ -60,7 +60,7 @@ import coil.compose.AsyncImage
 import com.example.pawsy.R
 import com.example.pawsy.ui.theme.PawsyTheme
 import com.example.pawsy.ui.theme.pawsyColors
-
+import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun EventosScreen(
     navController: NavController,
@@ -449,4 +449,31 @@ private fun compartir(context: Context, e: Evento) {
         putExtra(Intent.EXTRA_TEXT, texto)
     }
     lanzar(context, Intent.createChooser(intent, "Compartir evento"))
+}
+
+
+// Ajusta el constructor a tu modelo real de Evento
+private fun eventoDemo() = Evento(
+    id = "1",
+    titulo = "Jornada de adopción en el Parque Simón Bolívar",
+    tipo = "adopcion",
+    fecha = com.google.firebase.Timestamp.now(),
+    direccion = "Calle 63 #68-95",
+    ciudad = "Bogotá",
+    organizador = "Fundación Huellitas",
+    descripcion = "Ven a conocer a decenas de perritos y gatitos que buscan un hogar.",
+    imagenUrl = "",
+    destacado = true,
+    lat = 4.658,
+    lng = -74.093
+)
+
+@Preview(showBackground = true, name = "Tarjeta de evento")
+@Composable
+private fun EventoCardPreview() {
+    PawsyTheme {
+        Box(Modifier.padding(16.dp)) {
+            EventoCard(eventoDemo()) {}
+        }
+    }
 }

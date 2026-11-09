@@ -37,10 +37,8 @@ import com.example.pawsy.ui.theme.pawsyColors
 fun PetSideMenu(
     onItemClick: (String) -> Unit,
     onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val colors = MaterialTheme.pawsyColors
-    val menuItems = listOf(
+    modifier: Modifier = Modifier,
+    menuItems: List<String> = listOf(
         "Perfil mascota",
         "Perfil usuario",
         "Paseos y actividad",
@@ -48,9 +46,10 @@ fun PetSideMenu(
         "Veterinarias cercanas",
         "Reconocimiento visual",
         "Eventos",
-        "Configuración",
         "Salir"
     )
+) {
+    val colors = MaterialTheme.pawsyColors
 
     var dragAccumulated by remember { mutableFloatStateOf(0f) }
 

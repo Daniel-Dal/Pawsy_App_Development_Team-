@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
+
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -19,7 +19,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
+
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -291,12 +291,27 @@ fun MyPetsScreen(navController: NavController) {
             modifier = Modifier.align(Alignment.CenterEnd)
         ) {
             PetSideMenu(
+                menuItems = listOf(
+                    "Perfil usuario",
+                    "Paseos y actividad",
+                    "Veterinarias cercanas",
+                    "Reconocimiento visual",
+                    "Eventos",
+                    "Salir"
+                ),
                 onItemClick = { item ->
                     when (item) {
                         "Perfil usuario" -> navController.navigate("userProfile")
                         "Paseos y actividad" -> navController.navigate("pya")
-                        "Recomendaciones" -> navController.navigate("recom")
                         "Veterinarias cercanas" -> navController.navigate("nearbyVets")
+                        "Reconocimiento visual" -> navController.navigate("food")
+                        "Eventos" -> navController.navigate("eventos")
+                        "Salir" -> {
+                            FirebaseAuth.getInstance().signOut()
+                            navController.navigate("login") {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        }
                     }
                 },
                 onDismiss = { menuExpanded = false }

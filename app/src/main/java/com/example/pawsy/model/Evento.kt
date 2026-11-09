@@ -59,5 +59,7 @@ data class Evento(
     val titulo: String,
     val hora: String = "",
     val id: String = UUID.randomUUID().toString(),
-    val calendarId: Long? = null
+    val calendarId: Long? = null,
+    val categoria: Categoria = Categoria.OTRO,
+    val recurrencia: Recurrencia = Recurrencia()
 )
