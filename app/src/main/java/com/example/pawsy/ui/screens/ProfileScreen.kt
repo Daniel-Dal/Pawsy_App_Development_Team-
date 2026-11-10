@@ -1,5 +1,6 @@
 package com.example.pawsy.ui.screens
 
+
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -40,7 +41,7 @@ import com.example.pawsy.R
 import com.example.pawsy.subirImagen
 import com.example.pawsy.ui.components.ContinueBotton
 import com.example.pawsy.ui.components.PawsyButton
-import com.example.pawsy.ui.components.PetSideMenu
+import com.example.pawsy.ui.components.PetSideMenuOverlay
 import com.example.pawsy.ui.theme.PawsyTheme
 import com.example.pawsy.ui.theme.colorPataSeleccionMascota
 import com.example.pawsy.ui.theme.pawsyColors
@@ -59,7 +60,6 @@ data class PetProfile(
     val urlImagen: String = ""
 )
 
-/** Convierte números o texto de Firestore a texto para mostrar. */
 private fun valorATexto(valor: Any?): String = when (valor) {
     null -> ""
     is Double -> if (valor % 1.0 == 0.0) valor.toLong().toString() else valor.toString()
@@ -399,46 +399,12 @@ fun ProfileScreen(
             }
         }
 
-        // Menú lateral desplegable
-        AnimatedVisibility(
+        PetSideMenuOverlay(
+            navController = navController,
             visible = menuExpanded,
-            enter = slideInHorizontally(
-                initialOffsetX = { fullWidth -> fullWidth }
-            ),
-            exit = slideOutHorizontally(
-                targetOffsetX = { fullWidth -> fullWidth }
-            ),
-            modifier = Modifier.align(Alignment.CenterEnd)
-        ) {
-            PetSideMenu(
-                menuItems = listOf(
-                    "Perfil usuario",
-                    "Paseos y actividad",
-                    "Recomendaciones",
-                    "Veterinarias cercanas",
-                    "Reconocimiento visual",
-                    "Eventos",
-                    "Salir"
-                ),
-                onItemClick = { item ->
-                    when (item) {
-                        "Perfil usuario" -> navController.navigate("userData")
-                        "Paseos y actividad" -> navController.navigate("pya")
-                        "Recomendaciones" -> navController.navigate("recom")
-                        "Veterinarias cercanas" -> navController.navigate("nearbyVets")
-                        "Reconocimiento visual" -> navController.navigate("food")
-                        "Eventos" -> navController.navigate("eventos")
-                        "Salir" -> {
-                            FirebaseAuth.getInstance().signOut()
-                            navController.navigate("login") {
-                                popUpTo(0) { inclusive = true }
-                            }
-                        }
-                    }
-                },
-                onDismiss = { menuExpanded = false }
-            )
-        }
+            onDismiss = { menuExpanded = false }
+        )
+
 
         // Confirmación para eliminar solo la foto
         if (mostrarDialogoEliminarFoto) {
@@ -534,6 +500,9 @@ fun ProfileScreen(
                 }
             )
         }
+
+
+
     }
 }
 

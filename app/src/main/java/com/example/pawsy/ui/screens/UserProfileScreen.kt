@@ -1,9 +1,9 @@
 package com.example.pawsy.ui.screens
 
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
+
+
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,11 +12,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,10 +37,10 @@ import com.example.pawsy.ui.theme.PawsyTheme
 import com.example.pawsy.ui.theme.pawsyColors
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.pawsy.ui.components.PetSideMenu
+import com.example.pawsy.ui.components.PetSideMenuOverlay
 import androidx.compose.foundation.layout.Box
 @Composable
-fun MyProfileText(navController: NavController,  mascotaId: String? = null,onEditClick: () -> Unit = {}) {
+fun MyProfileText(navController: NavController,  mascotaId: String? = null) {
     var menuExpanded by remember { mutableStateOf(false) }
     PawsyTheme {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -124,37 +122,12 @@ fun MyProfileText(navController: NavController,  mascotaId: String? = null,onEdi
                 }
 
             }
-            AnimatedVisibility(
+            PetSideMenuOverlay(
+                navController = navController,
                 visible = menuExpanded,
-                enter = slideInHorizontally(
-                    initialOffsetX = { fullWidth -> fullWidth }
-                ),
-                exit = slideOutHorizontally(
-                    targetOffsetX = { fullWidth -> fullWidth }
-                ),
-                modifier = Modifier.align(Alignment.CenterEnd)
-            ) {
-                PetSideMenu(
-                    onItemClick = { item ->
-                        when (item) {
-                            "Perfil mascota" -> {
-                                val id = mascotaId ?: MascotaSeleccionada.id
-                                if (id != null) {
-                                    navController.navigate("petProfile/$id")
-                                } else {
-                                    navController.navigate("myPets")
-                                }
-                            }
-                            "Paseos y actividad" -> navController.navigate("pya")
-                            "Recomendaciones" -> navController.navigate("recom")
-                            "Veterinarias cercanas" -> navController.navigate("nearbyVets")
-                            "Reconocimiento visual" -> navController.navigate("food")
-                            "Eventos" -> navController.navigate("eventos")
-                        }
-                    },
-                    onDismiss = { menuExpanded = false }
-                )
-            }
+                onDismiss = { menuExpanded = false },
+                mascotaId = mascotaId
+            )
         }
     }
 }

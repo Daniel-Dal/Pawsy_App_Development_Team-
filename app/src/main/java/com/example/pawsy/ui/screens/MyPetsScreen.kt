@@ -42,6 +42,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.pawsy.R
+import androidx.compose.foundation.layout.statusBarsPadding
 import com.example.pawsy.ui.components.BasicCircleBotton
 import com.example.pawsy.ui.components.PetSideMenu
 import com.example.pawsy.ui.theme.PawsyFontFamily
@@ -54,17 +55,13 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 
-/** Mascota tal como se guarda en Firestore (la foto es una URL). */
+
 data class MascotaItem(
     val id: String,
     val nombre: String,
     val urlImagen: String
 )
 
-/**
- * Lee el arreglo "mascotas" del documento del usuario y trae cada mascota
- * de la colección "mascotas". Si el usuario no tiene el arreglo, devuelve una lista vacía.
- */
 suspend fun cargarMascotasUsuario(): List<MascotaItem> {
     val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return emptyList()
     val db = FirebaseFirestore.getInstance()
@@ -115,13 +112,16 @@ fun MyPetsScreen(navController: NavController) {
     ) {
 /*
         BasicCircleBotton(
-            onClick = { },
-            size = 60.dp,
+            onClick = {
+                if (!navController.popBackStack()) navController.navigate("menu")
+            },
+            size = 50.dp,
             modifier = Modifier
                 .align(Alignment.TopStart)
+                .statusBarsPadding()
                 .padding(
-                    top = 645.dp,
-                    start = 300.dp
+                    top = 12.dp,
+                    start = 16.dp
                 ),
             backgroundColor = MaterialTheme.pawsyColors.fondoAgregarMascota
         ) {

@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.BorderStroke
@@ -51,7 +50,7 @@ import com.example.pawsy.model.aFecha
 import com.example.pawsy.model.aLocal
 import com.example.pawsy.model.ocurreEn
 import com.example.pawsy.ui.components.CalendarioMensual
-import com.example.pawsy.ui.components.PetSideMenu
+import com.example.pawsy.ui.components.PetSideMenuOverlay
 import com.example.pawsy.ui.theme.PawsyTheme
 import com.example.pawsy.ui.theme.pawsyColors
 import com.google.firebase.auth.FirebaseAuth
@@ -252,51 +251,14 @@ fun RegistroPaseoActividad(
                 }
             }
 
-            AnimatedVisibility(
+            PetSideMenuOverlay(
+                navController = navController,
                 visible = menuExpanded,
-                enter = slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }),
-                exit = slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }),
-                modifier = Modifier.align(Alignment.CenterEnd)
-            ) {
-                PetSideMenu(
-                    menuItems = listOf(
-                        "Perfil mascota",
-                        "Perfil usuario",
-                        "Recomendaciones",
-                        "Veterinarias cercanas",
-                        "Reconocimiento visual",
-                        "Eventos",
-                        "Salir"
-                    ),
-                    onItemClick = { item ->
-                        when (item) {
-                            "Perfil mascota" -> {
-                                val id = mascotaId ?: MascotaSeleccionada.id
-                                if (id != null) {
-                                    navController.navigate("petProfile/$id")
-                                } else {
-                                    navController.navigate("myPets")
-                                }
-                            }
-                            "Perfil usuario" -> navController.navigate("userData")
-                            "Recomendaciones" -> navController.navigate("recom")
-                            "Veterinarias cercanas" -> navController.navigate("nearbyVets")
-                            "Reconocimiento visual" -> navController.navigate("food")
-                            "Eventos" -> navController.navigate("eventos")
-                            "Salir" -> {
-                                FirebaseAuth.getInstance().signOut()
-                                navController.navigate("login") {
-                                    popUpTo(0) { inclusive = true }
-                                }
-                            }
-                        }
-                    },
-                    onDismiss = { menuExpanded = false }
-                )
-            }
+                onDismiss = { menuExpanded = false },
+                mascotaId = mascotaId
+            )
         }
 
-        // Paneles superpuestos (dibujados dentro de la pantalla, sin ventana aparte)
         if (mostrarDialogo) {
             DialogoNuevoEvento(
                 fecha = diaSeleccionado,

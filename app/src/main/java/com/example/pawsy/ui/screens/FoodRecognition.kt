@@ -44,18 +44,16 @@ import com.example.pawsy.R
 import com.example.pawsy.ui.theme.PawsyTheme
 import com.example.pawsy.ui.theme.pawsyColors
 import androidx.compose.ui.unit.sp
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.clickable
-import com.example.pawsy.ui.components.PetSideMenu
+import com.example.pawsy.ui.components.PetSideMenuOverlay
 @Composable
 fun FoodRecognition(
     navController: NavController,
     vm: FoodRecognitionViewModel = viewModel(),
     mascotaId: String? = null,
-    onEditClick: () -> Unit = {}
-) {
+)
+
+{
     var menuExpanded by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -251,7 +249,8 @@ fun FoodRecognition(
                     .padding(16.dp)
                     .size(70.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.pawsyColors.editTextAgregarMascota),
+                    .background(MaterialTheme.pawsyColors.editTextAgregarMascota)
+                    .clickable { menuExpanded = !menuExpanded },
                 contentAlignment = Alignment.Center
             ) {
 
@@ -262,33 +261,12 @@ fun FoodRecognition(
 
                 )
             }
-            AnimatedVisibility(
+            PetSideMenuOverlay(
+                navController = navController,
                 visible = menuExpanded,
-                enter = slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }),
-                exit = slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }),
-                modifier = Modifier.align(Alignment.CenterEnd)
-            ) {
-                PetSideMenu(
-                    onItemClick = { item ->
-                        when (item) {
-                            "Perfil mascota" -> {
-                                val id = mascotaId ?: MascotaSeleccionada.id
-                                if (id != null) {
-                                    navController.navigate("petProfile/$id")
-                                } else {
-                                    navController.navigate("myPets")
-                                }
-                            }
-                            "Perfil usuario" -> navController.navigate("userProfile")
-                            "Paseos y actividad" -> navController.navigate("pya")
-                            "Recomendaciones" -> navController.navigate("recom")
-                            "Veterinarias cercanas" -> navController.navigate("nearbyVets")
-                            "Eventos" -> navController.navigate("eventos")
-                        }
-                    },
-                    onDismiss = { menuExpanded = false }
-                )
-            }
+                onDismiss = { menuExpanded = false },
+                mascotaId = mascotaId
+            )
         }
     }
 }

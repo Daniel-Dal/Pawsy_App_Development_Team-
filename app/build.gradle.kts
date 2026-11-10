@@ -7,14 +7,16 @@ plugins {
     id("com.google.gms.google-services")
 }
 
-val propiedadesLocales = Properties()
-val archivoLocal = rootProject.file("local.properties")
-
-if (archivoLocal.exists()) {
-    archivoLocal.inputStream().use {
-        propiedadesLocales.load(it)
+fun cargarPropiedades(vararg nombres: String): Properties {
+    val props = Properties()
+    nombres.reversed().forEach { nombre ->
+        val archivo = rootProject.file(nombre)
+        if (archivo.exists()) archivo.inputStream().use { props.load(it) }
     }
+    return props
 }
+
+val propiedadesLocales = cargarPropiedades("local.properties", "config.properties")
 
 val supabaseUrl: String = propiedadesLocales.getProperty("SUPABASE_URL", "")
 val supabaseKey: String = propiedadesLocales.getProperty(
@@ -22,9 +24,10 @@ val supabaseKey: String = propiedadesLocales.getProperty(
     propiedadesLocales.getProperty("SUPABASE_ANON_KEY", "")
 )
 
-val localProps = Properties().apply {
-    val file = rootProject.file("local.properties")
-    if (file.exists()) load(file.inputStream())
+val localProps = propiedadesLocales
+
+if (supabaseUrl.isBlank() || supabaseKey.isBlank()) {
+    logger.warn("⚠ SUPABASE_URL / SUPABASE_ANON_KEY no están definidos en local.properties ni config.properties: la subida de imágenes fallará.")
 }
 
 android {

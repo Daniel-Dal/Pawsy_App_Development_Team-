@@ -11,21 +11,21 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.ByteArrayOutputStream
 
-private const val BUCKET = "Imagenes"   // cambia por el nombre real de tu bucket
+private const val BUCKET = "Imagenes"
 private const val MAX_BYTES = 5L * 1024 * 1024
 private val TIPOS_PERMITIDOS = mapOf(
     "image/jpeg" to "jpg",
+    "image/jpg" to "jpg",
     "image/png" to "png",
     "image/webp" to "webp"
 )
 private val clienteHttp = OkHttpClient()
 
-/**
- * Sube una imagen a Supabase Storage y devuelve su URL pública.
- * Lanza una excepción si algo falla (por eso se llama dentro de try/catch).
- */
 suspend fun subirImagen(context: Context, imagenUri: Uri): String =
     withContext(Dispatchers.IO) {
+        if (BuildConfig.SUPABASE_URL.isBlank() || BuildConfig.SUPABASE_ANON_KEY.isBlank()) {
+            error("Falta configurar SUPABASE_URL y SUPABASE_ANON_KEY en local.properties o config.properties")
+        }
         val mime = context.contentResolver.getType(imagenUri)
             ?: error("Tipo de archivo desconocido")
         val extension = TIPOS_PERMITIDOS[mime]
@@ -50,12 +50,13 @@ suspend fun subirImagen(context: Context, imagenUri: Uri): String =
             .url("${BuildConfig.SUPABASE_URL}/storage/v1/object/$BUCKET/$path")
             .addHeader("apikey", BuildConfig.SUPABASE_ANON_KEY)
             .addHeader("Authorization", "Bearer ${BuildConfig.SUPABASE_ANON_KEY}")
+            .addHeader("x-upsert", "true")
             .post(bytes.toRequestBody(mime.toMediaType()))
             .build()
 
         clienteHttp.newCall(request).execute().use { resp ->
             if (!resp.isSuccessful) {
-                val cuerpo = resp.body?.string()
+                val cuerpo = resp.body.string()
                 android.util.Log.e("SUBIR_IMAGEN", "code=${resp.code} cuerpo=$cuerpo")
                 error("Error al subir (${resp.code}): $cuerpo")
             }
